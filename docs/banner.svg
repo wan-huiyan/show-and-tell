@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" font-family="monospace">
+  <!-- ===== show-and-tell pixel banner: a little presenter at an easel, under a spotlight ===== -->
+  <defs>
+    <radialGradient id="spot" cx="50%" cy="0%" r="85%">
+      <stop offset="0%" stop-color="#ffce4a" stop-opacity="0.30"/>
+      <stop offset="55%" stop-color="#b06bff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0a0612" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a0f2e"/>
+      <stop offset="100%" stop-color="#0a0612"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="720" height="240" rx="18" fill="url(#bg)"/>
+  <rect width="720" height="240" rx="18" fill="none" stroke="#3a2557" stroke-width="2"/>
+
+  <!-- scanline texture -->
+  <g opacity="0.05">
+    <rect x="0" y="0" width="720" height="2" fill="#fff"/>
+    <rect x="0" y="40" width="720" height="2" fill="#fff"/>
+    <rect x="0" y="80" width="720" height="2" fill="#fff"/>
+    <rect x="0" y="120" width="720" height="2" fill="#fff"/>
+    <rect x="0" y="160" width="720" height="2" fill="#fff"/>
+    <rect x="0" y="200" width="720" height="2" fill="#fff"/>
+  </g>
+
+  <!-- spotlight cone from top -->
+  <polygon points="360,0 250,200 470,200" fill="url(#spot)"/>
+
+  <!-- little stars / fairy dust -->
+  <g fill="#ffce4a">
+    <rect x="80" y="44" width="5" height="5"/>
+    <rect x="640" y="60" width="5" height="5"/>
+    <rect x="120" y="150" width="4" height="4"/>
+    <rect x="600" y="170" width="4" height="4"/>
+  </g>
+  <g fill="#46e8c8">
+    <rect x="150" y="70" width="4" height="4"/>
+    <rect x="585" y="100" width="4" height="4"/>
+  </g>
+  <g fill="#ff5ea8">
+    <rect x="660" y="130" width="4" height="4"/>
+    <rect x="95" y="110" width="4" height="4"/>
+  </g>
+
+  <!-- ===== EASEL (left of center) ===== -->
+  <!-- legs (7px grid) -->
+  <g fill="#8B5E3C">
+    <rect x="196" y="120" width="7" height="84"/>
+    <rect x="266" y="120" width="7" height="84"/>
+    <rect x="231" y="190" width="7" height="22"/>
+  </g>
+  <!-- cross brace -->
+  <rect x="200" y="170" width="70" height="7" fill="#6b4a2e"/>
+
+  <!-- poster/canvas -->
+  <rect x="180" y="56" width="112" height="84" rx="4" fill="#22143b" stroke="#46e8c8" stroke-width="3"/>
+  <!-- a friendly bar chart drawn on the poster -->
+  <rect x="194" y="110" width="14" height="20" fill="#46e88a"/>
+  <rect x="214" y="96" width="14" height="34" fill="#ffce4a"/>
+  <rect x="234" y="84" width="14" height="46" fill="#ff5a3c"/>
+  <rect x="254" y="102" width="14" height="28" fill="#b06bff"/>
+  <!-- title line on poster -->
+  <rect x="194" y="68" width="74" height="6" fill="#f3e9ff"/>
+  <rect x="194" y="78" width="50" height="5" fill="#a991c9"/>
+
+  <!-- ===== PRESENTER (right of easel) — pixel kid with a pointer ===== -->
+  <g>
+    <!-- hair -->
+    <rect x="336" y="84" width="35" height="7" fill="#2C2C2C"/>
+    <rect x="329" y="91" width="49" height="7" fill="#2C2C2C"/>
+    <!-- face -->
+    <rect x="336" y="98" width="42" height="28" fill="#FFDAB9"/>
+    <!-- eyes -->
+    <rect x="345" y="105" width="6" height="6" fill="#333"/>
+    <rect x="363" y="105" width="6" height="6" fill="#333"/>
+    <!-- smile -->
+    <rect x="349" y="117" width="16" height="5" fill="#E8967A"/>
+    <!-- body / shirt (violet, brand color) -->
+    <rect x="329" y="126" width="56" height="42" fill="#b06bff"/>
+    <!-- shirt highlight -->
+    <rect x="336" y="133" width="14" height="28" fill="#c98aff"/>
+    <!-- raised arm holding pointer -->
+    <rect x="315" y="126" width="14" height="7" fill="#FFDAB9"/>
+    <rect x="301" y="119" width="14" height="7" fill="#FFDAB9"/>
+    <!-- pointer stick toward easel -->
+    <rect x="280" y="112" width="28" height="4" fill="#ffce4a"/>
+    <rect x="276" y="110" width="6" height="8" fill="#46e8c8"/>
+    <!-- legs -->
+    <rect x="333" y="168" width="14" height="36" fill="#444"/>
+    <rect x="361" y="168" width="14" height="36" fill="#444"/>
+    <!-- shoes -->
+    <rect x="329" y="200" width="20" height="8" fill="#222"/>
+    <rect x="361" y="200" width="20" height="8" fill="#222"/>
+  </g>
+
+  <!-- speech bubble: plain English -->
+  <g>
+    <rect x="398" y="70" width="250" height="44" rx="10" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
+    <polygon points="398,96 386,104 398,108" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
+    <rect x="396" y="96" width="4" height="12" fill="#160c28"/>
+    <text x="414" y="90" font-size="15" fill="#f3e9ff" font-weight="bold">"...so basically, in plain</text>
+    <text x="414" y="108" font-size="15" fill="#46e8c8" font-weight="bold">English — here's the gist!" 🎪</text>
+  </g>
+
+  <!-- ground line -->
+  <rect x="40" y="206" width="640" height="3" fill="#3a2557"/>
+
+  <!-- title -->
+  <text x="40" y="232" font-size="13" fill="#a991c9">🎪 show-and-tell · plain-English explainer reports · 🔥🪙🌙⚡🎮</text>
+</svg>

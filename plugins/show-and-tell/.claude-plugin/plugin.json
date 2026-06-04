@@ -1,0 +1,9 @@
+{
+  "name": "show-and-tell",
+  "description": "Turn dense technical findings into a beautiful, plain-English, self-contained HTML explainer a non-technical stakeholder can actually understand — one everyday metaphor carried throughout, real numbers shown honestly, engineer's-note asides, a foregrounded honesty/limits box, and a cute arcade/pixel aesthetic that opens straight from file://.",
+  "version": "1.0.0",
+  "author": { "name": "Huiyan Wan" },
+  "repository": "https://github.com/wan-huiyan/show-and-tell",
+  "license": "MIT",
+  "keywords": ["documentation", "reporting", "data-viz", "explainer", "plain-english", "html"]
+}
