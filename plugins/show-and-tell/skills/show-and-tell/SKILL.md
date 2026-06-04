@@ -14,7 +14,7 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 1.0.0
+version: 2.0.0
 date: 2026-06-04
 ---
 
@@ -105,18 +105,35 @@ the order; it's the reading rhythm.
    the report is only as honest as your grasp of the facts.
 2. **Choose the metaphor** (see above). Sanity-check it carries the bad news too.
 3. **Copy `assets/template.html`** to your output path and re-bind each slot. Keep the entire `<style>`
-   block as-is — it's a proven arcade theme (dark, pixel-ish, animated bars, fairy-dust palette). Edit
-   content, not CSS, unless you're deliberately restyling.
+   block + the small theme `<script>` as-is — it's a CSS-variable theme system: arcade (default, dark/
+   pixel/fairy-dust) plus **paper** (light, print-friendly) and **midnight**, reader-switchable via the
+   top-right 🎮/📄/🌌 toggle (print forces a clean light theme). Edit content, not CSS — and never hardcode
+   a colour; every colour is a `--var` so all three themes stay correct.
 4. **Write plain.** Short sentences. Second person. Name a thing once in metaphor, then reuse it. If a
    sentence has a piece of jargon the audience won't know, either cut it or move it to an engineer's note.
 5. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
    keep.
-6. **Verify the render** (next section) — a broken CSS variable silently turns text invisible.
-7. **Open it** for the user: `open <file>.html` (macOS) so they see it immediately.
+6. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
+   A plain-English translation drifts easily; catch it before a stakeholder reads it.
+7. **Verify the render** (below) — a broken CSS variable silently turns text invisible.
+8. **Open it** for the user: `open <file>.html` (macOS) so they see it immediately.
+
+## Fact-check before you ship — the honesty gate
+The skill's whole promise is "translate, don't distort." A metaphor or a rounded number drifts from the
+source with frightening ease — "could reduce" becomes "will halve," a real figure binds to the wrong
+metric, a vivid analogy implies a certainty the findings never had. So before you hand the report over,
+**dispatch a separate fact-verifier subagent** (fresh eyes — not the author) given BOTH the original
+technical source AND your report. The reusable prompt + the exact checks live in
+`references/fact-verifier.md` — it checks number-binding (not just presence), magnitude/causal/metaphor
+drift, and material omissions, and it **fails loud** when a claim has no locatable basis (an
+"I-couldn't-verify" is a flag, never a silent pass). Fix every DRIFT/FABRICATED/UNVERIFIABLE before
+delivering. *Honest limit: an LLM checking an LLM reduces drift, it doesn't eliminate it — for
+high-stakes reports a human still skims the source-vs-claim table.*
 
 ## Verify the render WITHOUT a screenshot
-The page is static (inline CSS, no JS, no external fonts), so you don't need a browser to catch the
-likely bugs — and the Playwright-MCP screenshot subsystem tends to wedge anyway. Run the bundled check:
+The page is self-contained (inline CSS, no external fonts, no build, no server — just one tiny inline
+script for the theme toggle), so you don't need a browser to catch the likely bugs — and the
+Playwright-MCP screenshot subsystem tends to wedge anyway. Run the bundled check:
 
 ```bash
 python3 ~/.claude/skills/show-and-tell/scripts/check_html.py <your-report>.html

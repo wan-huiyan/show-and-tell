@@ -44,6 +44,8 @@ The proven recipe:
 | 🛠️ **"Engineer's note" asides** | A muted layer with the precise mechanism / metric name / exact method. The lay reader's eye skips it; the technical reader drops in. One document, two audiences. |
 | ⚖️ **A foregrounded honesty box** | "Here's what we're NOT sure of" gets its own box, not a footnote. Small sample, floor-not-ceiling caveats, the unmeasured bits. This is what separates a translation from a sales pitch. |
 | 🕹️ **A cute arcade/pixel aesthetic** | Dark bg, neon bars, fairy-dust palette, animated fills. Opens straight from `file://` — no build step, no server, no dependencies. Just `open` it. |
+| 🎨 **Three reader-switchable themes** | A 🎮/📄/🌌 toggle (top-right; it remembers the choice): **arcade** (default), a print-friendly **paper** light theme, and **midnight**. Forward it to a boss who likes light mode; print it clean. |
+| 🔎 **A bundled fact-verifier** | Translation drifts. A separate verifier ([`references/fact-verifier.md`](references/fact-verifier.md)) checks every plain claim, number, and the metaphor against the technical source — number-binding, magnitude/causal/metaphor drift, omissions — and **fails loud** when it can't find the basis. Reduces drift; doesn't replace a human skim. |
 
 It ships a **proven HTML template** ([`assets/template.html`](assets/template.html)) you copy and re-bind, plus a **render-safety checker** ([`scripts/check_html.py`](scripts/check_html.py)) that catches the silent "half the page is invisible" CSS-variable bug before anyone opens it.
 
@@ -147,7 +149,7 @@ Honesty box for the skill itself (of course it has one):
 
 ## 🧩 Dependencies
 
-- **Required:** nothing. The output is a single self-contained HTML file (inline CSS, no JS, no external fonts) — it opens in any browser straight from disk.
+- **Required:** nothing. The output is a single self-contained HTML file (inline CSS, no external fonts, no build, no server — just one tiny inline script for the theme toggle) — it opens in any browser straight from disk.
 - **Optional:** `python3` for the render-safety check (`scripts/check_html.py`). Without it you lose the automated invisible-text guard but the skill still works.
 
 ---
@@ -177,6 +179,7 @@ Honesty box for the skill itself (of course it has one):
 
 ## 📜 Version History
 
+- **v2.0.0** (2026-06-04) — a **theme switcher** (🎮 arcade / 📄 paper-light / 🌌 midnight, print-friendly) baked into every report; a bundled **fact-verifier** (`references/fact-verifier.md`) that checks the plain-English claims against the technical source for *drift* before you ship; banner + README polish.
 - **v1.0.0** (2026-06-04) — first public release. Plain-English explainer skill + proven `template.html` (kitchen worked example) + `check_html.py` render-safety checker + pixel banner.
 
 ---
