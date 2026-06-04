@@ -10,14 +10,15 @@
 ![show-and-tell pixel banner — a little presenter at an easel under a spotlight](docs/banner.png)
 
 ```
-  ╔══════════════════════════════════════════════════════════════╗
-  ║   🎪  S H O W   ·   A N D   ·   T E L L                        ║
-  ║                                                                ║
-  ║      ▟▙  "...so basically, in plain English,                  ║
-  ║     ▗██▖    here's the gist!"  ▕▔▔▔▏ ▕▔▔▔▏ ▕▔▔▔▏              ║
-  ║     ▝██▘                       ▕▁▁▁▏ ▕███▏ ▕▁▁▁▏              ║
-  ║      ▐▌    🔥 51%  🪙 ~2h  🌙 5 nights  ⚡ honest             ║
-  ╚══════════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║             S H O W   ·   A N D   ·   T E L L              ║
+║                                                            ║
+║   "...so basically, in plain English, here's the gist!"    ║
+║                                                            ║
+║   one metaphor  ·  real numbers  ·  an honest limits box   ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
 ```
 
 *A Claude Code skill that translates — it doesn't dumb down. The non-expert gets the gist and the honest bottom line; the engineer drops into the asides and finds nothing wrong. 🔥🪙🌙⚡🎮*

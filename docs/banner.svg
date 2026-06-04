@@ -96,14 +96,16 @@
     <rect x="361" y="200" width="20" height="8" fill="#222"/>
   </g>
 
-  <!-- speech bubble: plain English -->
+  <!-- speech bubble: plain English (widened so the text sits fully inside) -->
   <g>
-    <rect x="398" y="70" width="250" height="44" rx="10" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
-    <polygon points="398,96 386,104 398,108" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
-    <rect x="396" y="96" width="4" height="12" fill="#160c28"/>
-    <text x="414" y="90" font-size="15" fill="#f3e9ff" font-weight="bold">"...so basically, in plain</text>
-    <text x="414" y="108" font-size="15" fill="#46e8c8" font-weight="bold">English — here's the gist!" 🎪</text>
+    <rect x="394" y="68" width="286" height="48" rx="10" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
+    <polygon points="394,96 382,104 394,108" fill="#160c28" stroke="#46e8c8" stroke-width="2"/>
+    <rect x="392" y="96" width="4" height="12" fill="#160c28"/>
+    <text x="410" y="90" font-size="15" fill="#f3e9ff" font-weight="bold">"...so basically, in plain</text>
+    <text x="410" y="108" font-size="15" fill="#46e8c8" font-weight="bold">English — here's the gist!"</text>
   </g>
+  <!-- little circus-tent mascot, just right of the bubble -->
+  <text x="690" y="108" font-size="22">🎪</text>
 
   <!-- ground line -->
   <rect x="40" y="206" width="640" height="3" fill="#3a2557"/>
