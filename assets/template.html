@@ -8,12 +8,14 @@
      re-bind the CONTENT in each "SLOT" below. The worked example here (a slow nightly job,
      explained as a "kitchen") shows the recipe on a generic topic — replace it with yours.
      Then run scripts/check_html.py on your file, and `open` it.
-     THEMES: every colour is a CSS variable; the reader switches arcade(default)/paper/midnight
-       via the top-right 🎮📄🌌 toggle (one small inline script + localStorage). Print forces a
-       clean light theme. Default is arcade — leave the :root values alone and it looks unchanged.
+     THEMES: every colour is a CSS variable; the reader switches arcade/paper/midnight via the
+       top-right 🎮📄🌌 toggle (one small inline script + localStorage). First visit follows the
+       OS light/dark preference (light → paper, else arcade); an explicit click is remembered.
+       Print forces a clean light theme. Leave the :root values alone and it looks unchanged.
      Components: .pill(.green/.warn) · .tiles>.tile(.t-flame/neon/coin/violet/pink/good/warn) ·
        .bar-row>.track>.fill(.good/bad/mid) · .callout(.aha/.good) · .two · ul.tight ·
-       .eng (engineer's note) · ul.chk>li(.d=done) · table · .meta · .big
+       .eng (engineer's note) · figure.figure (inline-SVG metaphor illustration; fills = var(--x)
+       only) · ul.chk>li(.d=done) · table · .meta · .big
      ===================================================================================== -->
 <style>
   /* ===== THEME TOKENS — arcade (default). Every theme-dependent colour lives here. ===== */
@@ -103,6 +105,11 @@
   ul.tight{margin:6px 0;padding-left:18px}ul.tight li{margin:5px 0;font-size:12.8px;color:var(--dim)}ul.tight li b{color:var(--ink)}
   .meta{display:inline-block;font-size:11px;color:var(--dim);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin-left:6px}
   .eng{font-size:11.5px;color:var(--eng);border-left:2px solid var(--line);padding-left:9px;margin:6px 0 2px}
+  /* figure — optional inline-SVG metaphor illustration. RULES: inline <svg> only (no <img src>,
+     no external files), every fill/stroke a var(--x) so it follows the theme switcher + print. */
+  figure.figure{margin:14px auto 6px;text-align:center;max-width:420px}
+  figure.figure svg{width:100%;height:auto;shape-rendering:crispEdges;display:block}
+  figure.figure figcaption{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.5}
   .chk{list-style:none;padding:0;margin:6px 0}.chk li{font-size:12.8px;color:var(--dim);padding:6px 0 6px 26px;position:relative;border-bottom:1px solid var(--hair)}
   .chk li::before{content:"▢";position:absolute;left:4px;color:var(--coin)}.chk li b{color:var(--ink)}.chk li.d::before{content:"✓";color:var(--good)}
   .ok{color:var(--good);font-weight:700}.no{color:var(--flame);font-weight:700}
@@ -158,6 +165,43 @@
   <!-- SLOT: PROBLEM vs PLAN (optional two-card) — in metaphor terms. Skip if audience already knows. -->
   <section>
     <h2><span class="num">1</span> What's going on, in the kitchen</h2>
+    <!-- SLOT: FIGURE (optional) — ONE inline-SVG illustration of the metaphor, honest news included.
+         Pixel-art style: <rect>s on a 7px grid, every fill a var(--x) so it themes. If you can't
+         draw the bad news into it, cut the figure — never let the art oversell. Delete this whole
+         <figure> if you're not illustrating. -->
+    <figure class="figure" role="img"
+      aria-label="Pixel scene: a chef re-chops yesterday's onions at the counter while the big oven beside them sits dark, switched off.">
+      <svg viewBox="0 0 168 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- night -->
+        <rect x="154" y="0" width="10" height="10" rx="3" fill="var(--moon)" opacity=".85"/>
+        <!-- chef: hat / face / body / legs -->
+        <rect x="21" y="0" width="14" height="7" fill="var(--ink)"/>
+        <rect x="14" y="7" width="28" height="7" fill="var(--ink)"/>
+        <rect x="21" y="14" width="14" height="14" fill="var(--coin)"/>
+        <rect x="28" y="17" width="4" height="4" fill="var(--bg)"/>
+        <rect x="14" y="28" width="28" height="21" fill="var(--neon)"/>
+        <rect x="42" y="28" width="7" height="7" fill="var(--coin)"/>
+        <rect x="49" y="25" width="4" height="10" fill="var(--dim)"/>
+        <rect x="21" y="49" width="6" height="7" fill="var(--violet)"/>
+        <rect x="32" y="49" width="6" height="7" fill="var(--violet)"/>
+        <!-- counter + the same onions as yesterday -->
+        <rect x="49" y="42" width="42" height="14" fill="var(--panel2)"/>
+        <rect x="49" y="42" width="42" height="2" fill="var(--line)"/>
+        <rect x="56" y="35" width="7" height="7" rx="3" fill="var(--violet)"/>
+        <rect x="66" y="38" width="3" height="3" fill="var(--violet)"/>
+        <rect x="72" y="35" width="7" height="7" rx="3" fill="var(--violet)"/>
+        <!-- the big oven — dark window, power light grey: it is OFF (the honest part of the picture) -->
+        <rect x="98" y="14" width="56" height="42" fill="var(--panel2)" stroke="var(--line)" stroke-width="2"/>
+        <rect x="105" y="28" width="42" height="21" fill="var(--track)"/>
+        <text x="126" y="42" text-anchor="middle" font-size="8" fill="var(--dim)" font-family="inherit">OFF</text>
+        <rect x="145" y="19" width="5" height="5" rx="2" fill="var(--dim)"/>
+        <!-- floor -->
+        <rect x="0" y="56" width="168" height="2" fill="var(--line)"/>
+      </svg>
+      <figcaption>The kitchen tonight, honestly drawn: re-chopping yesterday's onions (the ~70%)
+        while the big oven we already paid for sits switched <b>off</b>. The picture carries the
+        bad news too — that's the rule.</figcaption>
+    </figure>
     <div class="two">
       <div class="callout"><h3>🔪 Today — re-chopping everything</h3>
         <p>Each night the kitchen starts from scratch: re-chops, re-measures, re-cooks <i>everything</i> —
@@ -176,9 +220,9 @@
   <section>
     <h2><span class="num">2</span> Where the hours actually go</h2>
     <p class="lead">We timed each stage across 5 nights. Here's the split.</p>
-    <div class="bar-row"><div class="lab">re-doing unchanged work</div><div class="track"><div class="fill bad" style="width:70%"></div></div><div class="amt">~70%</div></div>
-    <div class="bar-row"><div class="lab">genuinely new work</div><div class="track"><div class="fill good" style="width:22%"></div></div><div class="amt">~22%</div></div>
-    <div class="bar-row"><div class="lab">waiting / overhead</div><div class="track"><div class="fill mid" style="width:8%"></div></div><div class="amt">~8%</div></div>
+    <div class="bar-row" role="img" aria-label="re-doing unchanged work: about 70%"><div class="lab">re-doing unchanged work</div><div class="track"><div class="fill bad" style="width:70%"></div></div><div class="amt">~70%</div></div>
+    <div class="bar-row" role="img" aria-label="genuinely new work: about 22%"><div class="lab">genuinely new work</div><div class="track"><div class="fill good" style="width:22%"></div></div><div class="amt">~22%</div></div>
+    <div class="bar-row" role="img" aria-label="waiting and overhead: about 8%"><div class="lab">waiting / overhead</div><div class="track"><div class="fill mid" style="width:8%"></div></div><div class="amt">~8%</div></div>
     <p style="font-size:12.5px;color:var(--dim)">Two-thirds of the night is the kitchen repeating itself —
       which is exactly the part the "keep the onions" fix removes.</p>
     <div class="callout aha"><h3><span class="i">💡</span>The surprise — the fast oven was never on</h3>
@@ -231,19 +275,22 @@
   <footer>🍳 Plain-English report · DATE · every figure traced to the timings · nothing changed yet, fully reversible 🔥🪙🌙⚡🎮</footer>
   </main>
 
-  <!-- tiny theme switcher: sets data-theme on <html>, remembers the choice. No other JS. -->
+  <!-- tiny theme switcher: sets data-theme on <html>, remembers the choice. First visit follows
+       the reader's OS light/dark preference (a light-mode boss gets paper, not a dark arcade);
+       once they touch the toggle, their pick wins. No other JS. -->
   <script>
   (function(){
     var KEY="showandtell-theme", root=document.documentElement,
         btns=document.querySelectorAll(".theme-switch button");
-    function set(t){
+    function set(t,save){
       root.setAttribute("data-theme", t);
       btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.set===t)); });
-      try{ localStorage.setItem(KEY,t); }catch(e){}
+      if(save){ try{ localStorage.setItem(KEY,t); }catch(e){} }
     }
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
-    set(saved||"arcade");
-    btns.forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.set); }); });
+    var prefLight=false; try{ prefLight=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches; }catch(e){}
+    set(saved||(prefLight?"paper":"arcade"), false);
+    btns.forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.set, true); }); });
   })();
   </script>
 </body></html>

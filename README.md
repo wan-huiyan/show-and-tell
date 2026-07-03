@@ -44,10 +44,11 @@ The proven recipe:
 | 🛠️ **"Engineer's note" asides** | A muted layer with the precise mechanism / metric name / exact method. The lay reader's eye skips it; the technical reader drops in. One document, two audiences. |
 | ⚖️ **A foregrounded honesty box** | "Here's what we're NOT sure of" gets its own box, not a footnote. Small sample, floor-not-ceiling caveats, the unmeasured bits. This is what separates a translation from a sales pitch. |
 | 🕹️ **A cute arcade/pixel aesthetic** | Dark bg, neon bars, fairy-dust palette, animated fills. Opens straight from `file://` — no build step, no server, no dependencies. Just `open` it. |
-| 🎨 **Three reader-switchable themes** | A 🎮/📄/🌌 toggle (top-right; it remembers the choice): **arcade** (default), a print-friendly **paper** light theme, and **midnight**. Forward it to a boss who likes light mode; print it clean. |
+| 🎨 **Three reader-switchable themes** | A 🎮/📄/🌌 toggle (top-right; it remembers the choice): **arcade** (default), a print-friendly **paper** light theme, and **midnight**. First visit follows the reader's OS light/dark preference — a light-mode boss lands on paper, not a dark arcade. Print it clean. |
+| 🖼️ **A metaphor-illustration slot** | An optional `figure.figure` component: one inline-SVG pixel scene of the metaphor (the chef re-chopping onions *while the oven sits off*). Every fill is a CSS variable so the art recolours itself across all three themes and print. Rule: the picture must carry the bad news too. Pairs perfectly with the [pixel-art](https://github.com/wan-huiyan/pixel-art) skill. |
 | 🔎 **A bundled fact-verifier** | Translation drifts. A separate verifier ([`references/fact-verifier.md`](references/fact-verifier.md)) checks every plain claim, number, and the metaphor against the technical source — number-binding, magnitude/causal/metaphor drift, omissions — and **fails loud** when it can't find the basis. Reduces drift; doesn't replace a human skim. |
 
-It ships a **proven HTML template** ([`assets/template.html`](assets/template.html)) you copy and re-bind, plus a **render-safety checker** ([`scripts/check_html.py`](scripts/check_html.py)) that catches the silent "half the page is invisible" CSS-variable bug before anyone opens it.
+It ships a **proven HTML template** ([`assets/template.html`](assets/template.html)) you copy and re-bind, plus a **render-safety checker** ([`scripts/check_html.py`](scripts/check_html.py)) that catches the silent "half the page is invisible" CSS-variable bug — and also verifies theme parity across all three themes, that the page stays truly self-contained (no render-time network fetches), and that every figure has a text alternative and no theme-breaking hardcoded colours — before anyone opens it.
 
 ---
 
@@ -59,7 +60,7 @@ The screenshot up top is the bundled template rendered as-is. It's a complete, s
 - The bad news — a rare "big delivery" night the fix helps less on — gets its own honesty box, not a hedge.
 - An engineer's note maps the metaphor back to the mechanism: "re-chopping onions" → "recomputing unchanged partitions."
 
-That's the whole recipe on a generic topic, ready for you to swap in yours. Open [`assets/template.html`](assets/template.html) and `python3 scripts/check_html.py assets/template.html` to poke at it.
+That's the whole recipe on a generic topic, ready for you to swap in yours. Open [`assets/template.html`](assets/template.html) and `python3 scripts/check_html.py assets/template.html --template` to poke at it (the `--template` flag allows the template's own unfilled `__TITLE__` slot).
 
 ---
 
@@ -124,8 +125,9 @@ The "Without" column isn't a strawman — a markdown summary is a perfectly reas
 | 3. **Copy the template** | [`assets/template.html`](assets/template.html). Keep the `<style>` block as-is (proven arcade theme); re-bind the content slots. |
 | 4. **Write plain** | Short sentences, second person. Name a thing once in metaphor, then reuse it. Jargon → cut it or move it to an engineer's note. |
 | 5. **Pair every claim with evidence** | A labelled bar or a stat tile. Never invent a number to fill a tile. |
-| 6. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags + every `var(--x)` defined. Catches the silent invisible-text bug. |
-| 7. **Open it** | `open your-report.html` so the user sees it immediately. |
+| 6. **Illustrate the metaphor** *(optional)* | One inline-SVG figure — pixel `<rect>`s on a 7px grid, every fill a `var(--x)`, the bad news drawn in. Skip it freely; text-first. |
+| 7. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. |
+| 8. **Open it** | `open` (macOS) / `xdg-open` (Linux) / `start` (Windows) `your-report.html` so the user sees it immediately. |
 
 ---
 
@@ -164,7 +166,8 @@ Honesty box for the skill itself (of course it has one):
 - Engineer's notes where the plain version loses something a technical reader wants.
 - If it corrects an earlier claim (even your own), it says so plainly.
 - No invented numbers to fill a tile.
-- Passes `check_html.py`: balanced tags, every CSS var defined, no leftover `__PLACEHOLDER__`.
+- If there's an illustration: inline SVG only, theme-var colours, the bad news drawn in, and an `aria-label` so it's not invisible to screen readers.
+- Passes `check_html.py`: balanced tags, every CSS var defined, theme parity across 🎮/📄/🌌, self-contained (no render-time network), figures labelled, no hardcoded colours, no leftover `__PLACEHOLDER__`.
 
 </details>
 
@@ -173,12 +176,13 @@ Honesty box for the skill itself (of course it has one):
 ## 🔗 Related
 
 - **[publish-skill](https://github.com/wan-huiyan/publish-skill)** — the skill used to package and ship this repo.
-- **[pixel-art](https://github.com/wan-huiyan/pixel-art)** — drew the banner mascot above.
+- **[pixel-art](https://github.com/wan-huiyan/pixel-art)** — drew the banner mascot above, and the recommended companion for the metaphor-illustration slot: its `<rect>`-on-a-7px-grid SVG characters drop straight into `figure.figure` (swap literal colours for theme vars).
 
 ---
 
 ## 📜 Version History
 
+- **v2.1.0** (2026-07-03) — a **metaphor-illustration slot** (`figure.figure`: inline-SVG pixel scenes, theme-var colours, "the picture carries the bad news too" — with a [pixel-art](https://github.com/wan-huiyan/pixel-art) integration path); themes now **auto-detect the reader's OS light/dark preference** on first visit; `check_html.py` grew four checks (theme parity, self-contained guard, figure text-alternatives, hardcoded-colour detection); the fact-verifier now checks **figure captions** for drift; accessible bar charts (`aria-label`s); cross-platform open instructions; a `sync-plugin.sh` + CI guard so the plugin copy can't drift from the root skill.
 - **v2.0.0** (2026-06-04) — a **theme switcher** (🎮 arcade / 📄 paper-light / 🌌 midnight, print-friendly) baked into every report; a bundled **fact-verifier** (`references/fact-verifier.md`) that checks the plain-English claims against the technical source for *drift* before you ship; banner + README polish.
 - **v1.0.0** (2026-06-04) — first public release. Plain-English explainer skill + proven `template.html` (kitchen worked example) + `check_html.py` render-safety checker + pixel banner.
 

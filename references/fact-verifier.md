@@ -25,7 +25,8 @@ writing — you are here to protect the reader from believing something the evid
 <<< paste the complete source here — the analysis doc, the measured numbers, the transcript. >>>
 
 **REPORT (the plain-English explainer to check):**
-<<< paste the report's text (or the rendered HTML's visible text) here. >>>
+<<< paste the report's text (or the rendered HTML's visible text) here — INCLUDING any figure
+captions and `aria-label` descriptions of illustrations: a picture makes claims too. >>>
 
 ### Hard preconditions (FAIL LOUD — do not rubber-stamp)
 - If the SOURCE is missing, partial, or you cannot locate it, **STOP and report `CANNOT VERIFY — source not provided/locatable`.** Never pass a report you couldn't check against a source. "I couldn't find the basis" is a FLAG, never a silent pass.
@@ -38,6 +39,11 @@ writing — you are here to protect the reader from believing something the evid
 4. **Metaphor faithfulness** *(the core worry).* The metaphor must not imply anything the source doesn't support. Test the analogy's implications one by one: if the metaphor says "we just flip the oven on and it's fixed," does the source actually support a clean, low-risk, near-complete fix — or only a partial/uncertain one? A vivid image that overpromises is drift even if no single sentence is false.
 5. **Material omission.** The source's key caveats/limits/risks must survive into the report's honesty box. Cherry-picking the good news and dropping the "but only on 5 nights / unconfirmed / small sample" is drift by omission.
 6. **Fabrication.** Any claim or number in the report with NO basis in the source → FABRICATED.
+7. **Figure / illustration drift.** An illustration is a claim in pixels. Check each figure's caption
+   and aria-label the same way as prose: does the scene imply something the source doesn't support
+   (a "fixed!" picture for a "could improve" finding; a triumphant image with the catch missing)?
+   The skill's rule is that the picture must carry the bad news too — flag a figure that only shows
+   the win, even if every sentence around it is individually accurate.
 
 ### Output — a per-claim table, then a verdict
 For EACH checked claim:

@@ -14,8 +14,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.0.0
-date: 2026-06-04
+version: 2.1.0
+date: 2026-07-03
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -81,13 +81,41 @@ real mechanism, the metric name, the exact method. The non-expert's eye skips th
 engineer drops in. This is how you serve both audiences in one document instead of writing two. Use it
 where the plain version genuinely loses something a technical reader would want — not on every section.
 
+## Illustrate the metaphor (optional, high-leverage)
+One small picture of the metaphor makes it land faster than any paragraph — a pixel librarian at
+her filing cabinet, a pixel kitchen with the oven off. The template ships a `figure.figure`
+component (inline SVG + caption) and a worked example. Rules, in priority order:
+
+- **Inline SVG only.** No `<img src>`, no external files, no fonts, no JS — the page must keep
+  opening from `file://` offline. (`check_html.py` enforces this.)
+- **Every fill/stroke is a `var(--x)`.** A hardcoded hex looks right in arcade and wrong in paper/
+  midnight/print. Use the theme tokens (`--neon`, `--coin`, `--violet`, `--ink`, `--panel2`,
+  `--track`, `--dim`…) and the art recolours itself when the reader flips the 🎮/📄/🌌 toggle.
+- **The picture must carry the bad news too** — same test as the metaphor itself. The template's
+  kitchen scene shows the oven *switched off*, not a triumphant chef. If you can't draw the catch
+  into it, cut the figure; never let the art oversell what the numbers say.
+- **Accessible or invisible:** the `<figure>` gets `role="img"` + an `aria-label` that states what
+  the scene shows (the inner `<svg>` is `aria-hidden`); purely decorative flourishes are
+  `aria-hidden="true"`.
+- **Style: pixel-art fits the arcade theme.** Draw with `<rect>`s on a 7px grid
+  (`shape-rendering:crispEdges` is set for you). If the **pixel-art skill**
+  (github.com/wan-huiyan/pixel-art) is installed, follow its character/scene conventions — it's the
+  same aesthetic; just swap its literal colours for theme vars. A hand-drawn/sketchy look also
+  works: 2–3 slightly-jittered overlapping `<path>` strokes, still `var(--x)`-coloured.
+- **One hero figure, maybe one spot figure.** This is seasoning, not the meal — text-first, and a
+  report with no figure at all is completely fine. Never block a report on art.
+- **Fact-check the figure like a claim.** A picture can drift exactly like prose (implying "fixed"
+  when the source says "could improve"). The fact-verifier checks captions and aria-labels too —
+  feed them in with the report text.
+
 ## Structure (the template's spine)
 The `assets/template.html` shell, top to bottom — re-bind the content, keep the bones:
 1. **Hero** — playful title with the metaphor named; a one-sentence plain framing; a row of "pills" with
    the headline facts (the win AND the catch).
 2. **The one-paragraph version** — the honest TL;DR, big text, stoppable.
 3. **A reminder of what we were even trying to do** — often a two-card "today (the problem) vs the plan,"
-   in metaphor terms. Skip if the audience already knows.
+   in metaphor terms, optionally led by the metaphor illustration (`figure.figure`). Skip if the
+   audience already knows.
 4. **Findings** — one section per real finding. Each pairs a plain claim with its number (bar/tile) and,
    where useful, an engineer's note. Bad news gets a clear callout, not a hedge.
 5. **What changed / what we can skip** — concrete outcomes, in plain terms.
@@ -107,16 +135,23 @@ the order; it's the reading rhythm.
 3. **Copy `assets/template.html`** to your output path and re-bind each slot. Keep the entire `<style>`
    block + the small theme `<script>` as-is — it's a CSS-variable theme system: arcade (default, dark/
    pixel/fairy-dust) plus **paper** (light, print-friendly) and **midnight**, reader-switchable via the
-   top-right 🎮/📄/🌌 toggle (print forces a clean light theme). Edit content, not CSS — and never hardcode
+   top-right 🎮/📄/🌌 toggle. First visit follows the reader's OS light/dark preference (light-mode
+   readers get paper); an explicit click is remembered; print forces a clean light theme. Edit
+   content, not CSS — and never hardcode
    a colour; every colour is a `--var` so all three themes stay correct.
 4. **Write plain.** Short sentences. Second person. Name a thing once in metaphor, then reuse it. If a
    sentence has a piece of jargon the audience won't know, either cut it or move it to an engineer's note.
 5. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
    keep.
-6. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
-   A plain-English translation drifts easily; catch it before a stakeholder reads it.
-7. **Verify the render** (below) — a broken CSS variable silently turns text invisible.
-8. **Open it** for the user: `open <file>.html` (macOS) so they see it immediately.
+6. **Optionally illustrate the metaphor** (see *Illustrate the metaphor*) — one inline-SVG figure,
+   theme-var colours, bad news included, or no figure at all.
+7. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
+   A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
+   captions/aria-labels in what gets checked.
+8. **Verify the render** (below) — a broken CSS variable silently turns text invisible.
+9. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
+   `start <file>.html` (Windows). In a remote/web session where you can't open a browser for them,
+   send/attach the file instead — it works the moment they double-click it.
 
 ## Fact-check before you ship — the honesty gate
 The skill's whole promise is "translate, don't distort." A metaphor or a rounded number drifts from the
@@ -133,18 +168,23 @@ high-stakes reports a human still skims the source-vs-claim table.*
 ## Verify the render WITHOUT a screenshot
 The page is self-contained (inline CSS, no external fonts, no build, no server — just one tiny inline
 script for the theme toggle), so you don't need a browser to catch the likely bugs — and the
-Playwright-MCP screenshot subsystem tends to wedge anyway. Run the bundled check:
+Playwright-MCP screenshot subsystem tends to wedge anyway. Run the bundled check — the script lives in
+`scripts/` next to this SKILL.md, wherever the skill is installed (`~/.claude/skills/`, a plugin dir,
+`~/.cursor/skills/`, …):
 
 ```bash
-python3 ~/.claude/skills/show-and-tell/scripts/check_html.py <your-report>.html
+python3 <skill-dir>/scripts/check_html.py <your-report>.html
 ```
 
-It confirms the HTML parses with balanced tags AND that every `var(--x)` you reference is actually
-defined in `:root` — the #1 cause of "I opened it and half the text is invisible" is a typo'd or
-undefined CSS variable (see `css-var-undefined-silent-declaration-drop`). If you added or renamed CSS
-classes/variables, this is what catches it before the user opens a broken page. For a true visual check,
-`open` the file (macOS) or serve the directory on a port and use `browser_evaluate` (file:// is blocked
-in the MCP browser) — but the static check covers the silent-failure cases.
+It confirms, in one pass: the HTML parses with balanced tags; every `var(--x)` you reference is
+actually defined — the #1 cause of "I opened it and half the text is invisible" is a typo'd or
+undefined CSS variable (see `css-var-undefined-silent-declaration-drop`); every theme block
+(paper/midnight) overrides the full token set, so switching themes can't leak wrong-contrast colours;
+the page stays **self-contained** (no render-time `http(s)` fetches — plain `<a>` links are fine);
+figures have text alternatives (`alt`/`aria-label`) and no hardcoded hex colours that would ignore the
+theme switcher; and no `__PLACEHOLDER__` slot was left unfilled. For a true visual check, `open`/
+`xdg-open`/`start` the file, or serve the directory on a port and use `browser_evaluate` (file:// is
+blocked in the MCP browser) — but the static check covers the silent-failure cases.
 
 ## Worked example
 The skill was extracted from a report that explained a retrieval-system investigation using a "robot
