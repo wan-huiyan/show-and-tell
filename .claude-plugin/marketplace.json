@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "wan-huiyan-show-and-tell",
-  "description": "show-and-tell \u2014 turn dense technical findings into a beautiful plain-English HTML explainer your boss will actually read.",
+  "description": "show-and-tell — turn dense technical findings into a beautiful plain-English HTML explainer your boss will actually read.",
   "owner": {
     "name": "Huiyan Wan"
   },
@@ -10,7 +10,7 @@
       "name": "show-and-tell",
       "source": "./plugins/show-and-tell",
       "description": "Plain-English, honest, arcade-styled HTML explainers for technical findings.",
-      "version": "2.0.0"
+      "version": "2.1.0"
     }
   ]
 }
