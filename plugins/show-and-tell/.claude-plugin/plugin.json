@@ -1,6 +1,6 @@
 {
   "name": "show-and-tell",
-  "description": "Turn dense technical findings into a beautiful, plain-English, self-contained HTML explainer a non-technical stakeholder can actually understand — one everyday metaphor carried throughout, real numbers shown honestly, engineer's-note asides, a foregrounded honesty/limits box, and a cute arcade/pixel aesthetic that opens straight from file://.",
+  "description": "Turn technical findings into a plain-English HTML explainer that fact-checks its own translation against your source — one everyday metaphor carried throughout, real numbers shown honestly, engineer's-note asides, a foregrounded honesty/limits box, and a bundled anti-drift fact-verifier. Arcade/pixel aesthetic, opens straight from file://.",
   "version": "2.1.0",
   "author": {
     "name": "Huiyan Wan"

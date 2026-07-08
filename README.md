@@ -5,7 +5,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-skill-orange)](https://claude.com/claude-code)
 [![style](https://img.shields.io/badge/aesthetic-arcade%2Fpixel-b06bff)](#-the-aesthetic-is-the-point)
 
-> **Turn dense technical findings into a beautiful, genuinely plain-English HTML explainer your boss will actually read.** One everyday metaphor, the real numbers shown honestly, engineer's-note asides, a foregrounded honesty box — wrapped in a cute arcade theme that opens straight from `file://`. No build, no server.
+> **The plain-English HTML explainer that fact-checks its own translation against your source — so what your boss reads is honest, not just pretty.** One everyday metaphor carried the whole way through (the bad news included), the real number beside every plain claim, an engineer's-note layer for the technical reader, and a foregrounded honesty box for what you're *not* sure of. Then a bundled **fact-verifier** checks every claim, number, and metaphor back against the source doc — catching the "could reduce" that quietly became "will halve" before anyone reads it. Self-contained HTML that opens straight from `file://` — no build, no server. *(And yes, it's a cute arcade cabinet.)*
 
 ![show-and-tell pixel banner — a little presenter at an easel under a spotlight](docs/banner.png)
 
