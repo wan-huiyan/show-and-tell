@@ -16,8 +16,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.1.0
-date: 2026-07-03
+version: 2.2.0
+date: 2026-07-08
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -58,6 +58,12 @@ real thing, and that you do not abandon halfway. It's the scaffold the non-exper
   rival.
 - It's cheap to try two metaphors in your head and keep the one that carries the *whole* story (good news
   AND limits AND what's next). Do that before you start writing.
+- **On number-dense findings, keep the metaphor light — it is itself a drift surface.** A metaphor that
+  lumps distinct sub-groups is a common source of *binding drift* (a stat lands on the wrong group), and
+  vivid prose invites invented scope words ("per session", "every run") the source never stated. Let the
+  engineer's-notes and the honesty box carry the precise sub-group boundaries and scopes. This is an
+  observed failure mode — your own careful draft can drift a number even when a plain summary wouldn't;
+  that is exactly why the fact-verifier (checks #1 and #8) is not optional.
 
 ## Honesty is the whole point — never trade truth for tidiness
 A plain-English report earns trust precisely because it *doesn't* hide the messy parts. This is what
