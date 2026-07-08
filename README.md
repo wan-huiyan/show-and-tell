@@ -137,6 +137,14 @@ The warm, playful arcade styling (dark + neon/coin/violet, animated fills, a lit
 
 ---
 
+## 🔬 An honest self-test (n=1)
+
+We ran the skill against its own ethos: one real, number-heavy finding, explained two ways — careful ad-hoc prompting vs. this skill + its fact-verifier — scored blind against the source.
+
+Finding (a pilot, not a proof): careful prompting is already good. The skill's *first draft* shipped two subtle number drifts a plain prompt didn't (a stat bound to the wrong sub-group; an invented "per-session" scope). The bundled fact-verifier caught both — which is the point: writing the metaphor is itself where a number drifts, and the verifier is what catches it. On this input the discipline *matched* careful ad-hoc; the fact-verifier is what earns the skill its keep. Scaling is TODO.
+
+---
+
 ## 🚧 Limitations
 
 Honesty box for the skill itself (of course it has one):
@@ -182,6 +190,7 @@ Honesty box for the skill itself (of course it has one):
 
 ## 📜 Version History
 
+- **v2.2.0** (2026-07-08) — the fact-verifier now names two drift modes it was missing: **sub-group / category mis-binding** (a real number bound to the wrong subset) and **invented scope qualifiers** (a `per-session` / `per-run` / "every" the source never stated); its framing is sharpened to *fidelity-to-your-source* (not world-truth); SKILL.md now flags that **the metaphor/prose layer is itself a drift surface** (keep the metaphor light on number-dense findings; let engineer's-notes carry sub-group boundaries); README lede repositioned to lead with the honesty/anti-drift discipline; added an **honest self-test** section. All grounded in an n=1 A/B pilot.
 - **v2.1.0** (2026-07-03) — a **metaphor-illustration slot** (`figure.figure`: inline-SVG pixel scenes, theme-var colours, "the picture carries the bad news too" — with a [pixel-art](https://github.com/wan-huiyan/pixel-art) integration path); themes now **auto-detect the reader's OS light/dark preference** on first visit; `check_html.py` grew four checks (theme parity, self-contained guard, figure text-alternatives, hardcoded-colour detection); the fact-verifier now checks **figure captions** for drift; accessible bar charts (`aria-label`s); cross-platform open instructions; a `sync-plugin.sh` + CI guard so the plugin copy can't drift from the root skill.
 - **v2.0.0** (2026-06-04) — a **theme switcher** (🎮 arcade / 📄 paper-light / 🌌 midnight, print-friendly) baked into every report; a bundled **fact-verifier** (`references/fact-verifier.md`) that checks the plain-English claims against the technical source for *drift* before you ship; banner + README polish.
 - **v1.0.0** (2026-06-04) — first public release. Plain-English explainer skill + proven `template.html` (kitchen worked example) + `check_html.py` render-safety checker + pixel banner.
