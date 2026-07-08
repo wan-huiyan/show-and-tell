@@ -2,11 +2,13 @@
 name: show-and-tell
 description: >
   Turn dense technical findings, an analysis, a code/research session outcome, or a jargon-heavy
-  document into a beautiful, genuinely PLAIN-ENGLISH self-contained HTML explainer that a
-  non-technical or busy stakeholder can actually understand — built on a single everyday metaphor
-  carried through the whole piece, with the REAL numbers shown honestly beside each plain claim, an
-  "engineer's note" layer so technical readers aren't shortchanged, an honesty/limits box, and an
-  arcade/pixel aesthetic that opens straight from file:// (no build, no server). Use this WHENEVER the
+  document into a genuinely PLAIN-ENGLISH self-contained HTML explainer a non-technical or busy
+  stakeholder can actually understand AND trust — built on a single everyday metaphor carried through
+  the whole piece (the bad news included), with the REAL numbers shown honestly beside each plain
+  claim, an "engineer's note" layer so technical readers aren't shortchanged, a foregrounded
+  honesty/limits box, and a bundled FACT-VERIFIER that checks every claim, number, and metaphor back
+  against the source document to catch translation drift before anyone reads it (self-contained, opens
+  straight from file:// — no build, no server; arcade/pixel aesthetic). Use this WHENEVER the
   user wants to explain technical work in plain English, make a pretty/shareable report, one-pager, or
   recap, summarize an investigation/session "so my boss/team/client can understand it," translate
   jargon results for a lay audience, or asks for an explainer/writeup/"make this readable" of findings —

@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "wan-huiyan-show-and-tell",
-  "description": "show-and-tell — turn dense technical findings into a beautiful plain-English HTML explainer your boss will actually read.",
+  "description": "show-and-tell — turn technical findings into a plain-English HTML explainer that fact-checks its own translation against your source, so what your boss reads is honest, not just pretty.",
   "owner": {
     "name": "Huiyan Wan"
   },
@@ -9,7 +9,7 @@
     {
       "name": "show-and-tell",
       "source": "./plugins/show-and-tell",
-      "description": "Plain-English, honest, arcade-styled HTML explainers for technical findings.",
+      "description": "Plain-English HTML explainers for technical findings, with a bundled anti-drift fact-verifier that keeps the translation honest.",
       "version": "2.1.0"
     }
   ]
