@@ -12,14 +12,18 @@ jobs:
       - name: template passes its own render-safety check
         run: python3 scripts/check_html.py assets/template.html --template
 
-      - name: the version agrees in all four places it is recorded
-        run: python3 tests/check_versions.py
+      - name: the version agrees everywhere, and shipped content was actually bumped
+        run: |
+          git fetch --no-tags --depth=50 origin main
+          python3 tests/check_versions.py --against origin/main
 
       - name: plugin copy is in sync with the root skill
         run: |
           ./sync-plugin.sh
-          if ! git diff --quiet -- plugins; then
-            git --no-pager diff --stat -- plugins
+          # --porcelain, not `git diff`: a NEW file synced into plugins/ is untracked, and
+          # `git diff` does not look at untracked files, so it would report clean.
+          if [ -n "$(git status --porcelain -- plugins)" ]; then
+            git status --short -- plugins
             echo "::error::plugin copy is out of sync with the root skill — run ./sync-plugin.sh and commit"
             exit 1
           fi

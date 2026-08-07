@@ -15,9 +15,10 @@ Catches the silent-failure cases that make a page open broken:
 
 WHAT IT DOES NOT CATCH — a pass means "the structure is sound", not "the page works":
   * It does not PARSE ATTRIBUTE VALUES. A truncated or malformed attribute leaves the tags
-    balanced, so this exits 0. Measured: a page whose one interactive widget had an
-    unescaped apostrophe inside a single-quoted attribute rendered with no working widget
-    at all, and this script's report was byte-identical to its report on the working page.
+    balanced, so this exits 0. Measured: on a page this script otherwise passes, one widget
+    with an unescaped apostrophe inside a single-quoted attribute rendered with no working
+    widget at all and this still exited 0 CLEAN — the same verdict word for word as on the
+    working page, differing only in the filename echoed on line 1.
   * It does not EXECUTE the page. No script error, no dead button, no failed fetch.
   * It does not check the CONTENT — whether the words are true, or match the source. That
     is what references/fact-verifier.md is for.

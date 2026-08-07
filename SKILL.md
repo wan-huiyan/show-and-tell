@@ -193,8 +193,9 @@ spending: their attention.
    assembled at runtime from hand-written `data-` attributes, and a chip that fails to persist or a key
    with a hole in it looks perfect on screen. Chrome is not always reachable (the extension was down the
    day this was written), so prefer a headless harness that loads the page's own script into a fake DOM
-   over a browser check that may not be runnable — see `docs/deliverables/scripts/promptback_shell.test.cjs`
-   in DoodleRun for a worked one, and wire it into the repo's suites so it keeps running.
+   over a browser check that may not be runnable. The harness needs to do three things: run the page's
+   own `<script>` against a minimal DOM, drive a chip and a note, and assert the copied text contains
+   the token AND its decoding. Wire it into your repo's test suite so it keeps running.
 9. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
    `start <file>.html` (Windows). In a remote/web session where you can't open a browser for them,
    send/attach the file instead — it works the moment they double-click it.
@@ -250,9 +251,10 @@ blocked in the MCP browser) — but the static check covers the silent-failure c
 out — so a page can pass it with its interactive half dead or its content running off the side of a
 phone. Two measured examples:
 
-- A page with an interactive widget whose options sat in a single-quoted attribute containing an
-  unescaped apostrophe rendered with **no working widget at all**, and `check_html.py` returned
-  **exit 0, CLEAN** — a report byte-identical to the one it gave the working page.
+- On a page this checker otherwise passes, one widget whose options sat in a single-quoted
+  attribute containing an unescaped apostrophe rendered with **no working widget at all**, and
+  `check_html.py` returned **exit 0, CLEAN** — the same verdict, word for word, as on the working
+  page. (Its two reports differ only in the filename it echoes back on line 1.)
 - A long file path in a receipts cell has nowhere to break, so it pushes the whole page sideways.
   Two real reports measured **527px and 691px wide inside a 390px viewport**. Fixed in the template
   as of v2.3.0, but the general point stands: **load the page and read `document.documentElement

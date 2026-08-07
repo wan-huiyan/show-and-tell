@@ -14,9 +14,10 @@ One deliberate exception: a **completion claim** — "done", "merged", "cleared 
 settled against a document at all, because a source that describes the work reads as support for
 the claim that it finished. Check 9 sends you to the real state instead.
 
-Run it as a SEPARATE subagent (fresh eyes — not the author), given BOTH the original technical
-source AND the drafted report. Below is the dispatch prompt; copy it, fill the two inputs, run it,
-and fix every DRIFT/FABRICATED/UNVERIFIABLE it returns.
+Run it as a SEPARATE subagent (fresh eyes — not the author), given the original technical source,
+the drafted report, and — if the report claims anything is finished — where to go and look. Below is
+the dispatch prompt; copy it, fill the inputs, run it, and fix every DRIFT/FABRICATED/UNVERIFIABLE
+it returns.
 
 > **Honest limit (carry this):** an LLM checking an LLM *reduces* drift, it does not eliminate it.
 > Treat a clean verdict as "no drift I could find," not "provably faithful." For high-stakes
@@ -24,7 +25,7 @@ and fix every DRIFT/FABRICATED/UNVERIFIABLE it returns.
 
 ---
 
-## Dispatch prompt (fill the two `<<< >>>` inputs)
+## Dispatch prompt (fill the `<<< >>>` inputs)
 
 You are an adversarial fact-checker. Your job is to find every place where a PLAIN-ENGLISH report
 has drifted from, overstated, or misrepresented its TECHNICAL SOURCE. You are not here to praise the
@@ -36,6 +37,12 @@ writing — you are here to protect the reader from believing something the evid
 **REPORT (the plain-English explainer to check):**
 <<< paste the report's text (or the rendered HTML's visible text) here — INCLUDING any figure
 captions and `aria-label` descriptions of illustrations: a picture makes claims too. >>>
+
+**WHERE THE REAL STATE IS (needed only for check 9 — omit if the report claims nothing is
+finished):**
+<<< the repo path, the pull request numbers or URLs, the issue ids, the deploy target — and
+confirmation that you may run `gh pr view`, `git log`, `ls`. Without this, check 9 can only
+return UNVERIFIABLE, which is a true answer but a useless one. >>>
 
 ### Hard preconditions (FAIL LOUD — do not rubber-stamp)
 - If the SOURCE is missing, partial, or you cannot locate it, **STOP and report `CANNOT VERIFY — source not provided/locatable`.** Never pass a report you couldn't check against a source. "I couldn't find the basis" is a FLAG, never a silent pass.
@@ -71,8 +78,12 @@ verdict ∈ {FAITHFUL, DRIFT, UNVERIFIABLE, FABRICATED}; severity ∈ {low, med,
 List FABRICATED/UNVERIFIABLE/high-severity DRIFT FIRST.
 
 **Then the omission list from check 5, separately** — an omission has no claim to quote, so it falls
-straight through a per-claim table and gets skipped. Give it its own rows:
-| source fact omitted (quote) | direction (report reads MORE alarming / LESS alarming) | severity | suggested fix |
+straight through a per-claim table and gets skipped. Give it its own rows, carrying a verdict from the
+SAME token set, because a material omission IS drift:
+| source fact omitted (quote) | direction (report reads MORE alarming / LESS alarming) | verdict | severity | suggested fix |
 An omission list that is empty, or that points only one way, is a result to be suspicious of.
 
-Then a one-line **SHIP VERDICT**: `CLEAN` (no drift found) · `FIX-THEN-SHIP` (drift present, fixes listed) · `MAJOR DRIFT` (the report misrepresents the findings — rework). Be concrete in the fixes (the exact wording change), and be honest if the source was too thin to check a given claim.
+Then a one-line **SHIP VERDICT**: `CLEAN` (no drift found in EITHER table — the omission list must be
+clean too) · `FIX-THEN-SHIP` (drift present, fixes listed) · `MAJOR DRIFT` (the report misrepresents the
+findings — rework). Be concrete in the fixes (the exact wording change), and be honest if the source was
+too thin to check a given claim.
