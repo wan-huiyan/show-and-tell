@@ -12,6 +12,9 @@ jobs:
       - name: template passes its own render-safety check
         run: python3 scripts/check_html.py assets/template.html --template
 
+      - name: the version agrees in all four places it is recorded
+        run: python3 tests/check_versions.py
+
       - name: plugin copy is in sync with the root skill
         run: |
           ./sync-plugin.sh

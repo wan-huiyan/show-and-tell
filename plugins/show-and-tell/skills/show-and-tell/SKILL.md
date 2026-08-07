@@ -16,8 +16,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.2.0
-date: 2026-07-08
+version: 2.3.0
+date: 2026-08-07
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -170,7 +170,20 @@ technical source AND your report. The reusable prompt + the exact checks live in
 `references/fact-verifier.md` — it checks number-binding (not just presence), magnitude/causal/metaphor
 drift, and material omissions, and it **fails loud** when a claim has no locatable basis (an
 "I-couldn't-verify" is a flag, never a silent pass). Fix every DRIFT/FABRICATED/UNVERIFIABLE before
-delivering. *Honest limit: an LLM checking an LLM reduces drift, it doesn't eliminate it — for
+delivering.
+
+Two of its checks exist because the verifier itself missed them on real work, and they are the two
+easiest to skim past:
+
+- **Omissions count in BOTH directions** (check 5). Dropping a caveat is the one everyone looks for.
+  Dropping a *reassuring* fact the source stated leaves the report more alarming than its own
+  source, and nobody's instinct flags it — a scarier report feels like the safe way to be wrong.
+  The verifier now lists omissions separately from the per-claim table, because an omission has no
+  claim to quote and falls straight through a table of quotes.
+- **"Done" is checked against real state, not against prose** (check 9). A source that describes the
+  clean-up reads as support for "was cleared out" while the pull request doing it is still open.
+
+*Honest limit: an LLM checking an LLM reduces drift, it doesn't eliminate it — for
 high-stakes reports a human still skims the source-vs-claim table.*
 
 ## Verify the render WITHOUT a screenshot
@@ -193,6 +206,14 @@ figures have text alternatives (`alt`/`aria-label`) and no hardcoded hex colours
 theme switcher; and no `__PLACEHOLDER__` slot was left unfilled. For a true visual check, `open`/
 `xdg-open`/`start` the file, or serve the directory on a port and use `browser_evaluate` (file:// is
 blocked in the MCP browser) — but the static check covers the silent-failure cases.
+
+**Read a pass as exactly what it is.** `check_html.py` validates the page's *structure*. It does
+**not** parse attribute values and it does **not** execute the page, so a page can pass it with its
+interactive half dead. Measured: a page with an interactive widget whose options sat in a
+single-quoted attribute containing an unescaped apostrophe rendered with **no working widget at
+all**, and `check_html.py` returned **exit 0, CLEAN** — a report byte-identical to the one it gave
+the working page. If your page carries content inside an attribute, or any behaviour at all, verify
+that separately by parsing the attribute or by loading the page.
 
 ## Worked example
 The skill was extracted from a report that explained a retrieval-system investigation using a "robot
