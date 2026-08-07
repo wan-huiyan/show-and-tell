@@ -95,7 +95,11 @@
   .fill.good{background:linear-gradient(90deg,var(--good-d),var(--good-b))}.fill.bad{background:linear-gradient(90deg,var(--bad-d),var(--bad-b))}.fill.mid{background:linear-gradient(90deg,var(--mid-d),var(--mid-b))}
   @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}.bar-row .amt{font-size:13px;font-weight:800}
   table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+  /* A file path or an id has no break opportunity, so one long token in a receipts cell
+     pushes the WHOLE page sideways on a phone. Measured: two real reports came out at 527px
+     and 691px inside a 390px viewport, while this template's own short example paths fit. */
+  code{overflow-wrap:anywhere}
   th{color:var(--dim);font-weight:600;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
   td.r{text-align:right;font-variant-numeric:tabular-nums}.hi{color:var(--neon);font-weight:800}.lo{color:var(--flame);font-weight:800}
   .callout{border:1px solid var(--call-bd);background:var(--call-bg);border-radius:12px;padding:15px 17px;margin:12px 0}

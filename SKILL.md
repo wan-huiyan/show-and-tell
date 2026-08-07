@@ -246,12 +246,18 @@ theme switcher; and no `__PLACEHOLDER__` slot was left unfilled. For a true visu
 blocked in the MCP browser) — but the static check covers the silent-failure cases.
 
 **Read a pass as exactly what it is.** `check_html.py` validates the page's *structure*. It does
-**not** parse attribute values and it does **not** execute the page, so a page can pass it with its
-interactive half dead. Measured: a page with an interactive widget whose options sat in a
-single-quoted attribute containing an unescaped apostrophe rendered with **no working widget at
-all**, and `check_html.py` returned **exit 0, CLEAN** — a report byte-identical to the one it gave
-the working page. If your page carries content inside an attribute, or any behaviour at all, verify
-that separately by parsing the attribute or by loading the page.
+**not** parse attribute values, it does **not** execute the page, and it does **not** lay the page
+out — so a page can pass it with its interactive half dead or its content running off the side of a
+phone. Two measured examples:
+
+- A page with an interactive widget whose options sat in a single-quoted attribute containing an
+  unescaped apostrophe rendered with **no working widget at all**, and `check_html.py` returned
+  **exit 0, CLEAN** — a report byte-identical to the one it gave the working page.
+- A long file path in a receipts cell has nowhere to break, so it pushes the whole page sideways.
+  Two real reports measured **527px and 691px wide inside a 390px viewport**. Fixed in the template
+  as of v2.3.0, but the general point stands: **load the page and read `document.documentElement
+  .scrollWidth` against `clientWidth` at 390px** before you hand it over. A screenshot will not tell
+  you — headless Chrome has a ~500px floor, so a "390px" picture is a crop of a 500px layout.
 
 ## Worked example
 The skill was extracted from a report that explained a retrieval-system investigation using a "robot
