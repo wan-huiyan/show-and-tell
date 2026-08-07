@@ -8,13 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # check_versions.py --against needs a merge base, and the default depth-1
+          # checkout has no shared history with origin/main to find one. It reports
+          # UNCHECKED and exits 3 rather than passing, which is how this was caught.
+          fetch-depth: 0
 
       - name: template passes its own render-safety check
         run: python3 scripts/check_html.py assets/template.html --template
 
       - name: the version agrees everywhere, and shipped content was actually bumped
         run: |
-          git fetch --no-tags --depth=50 origin main
+          git fetch --no-tags origin main
           python3 tests/check_versions.py --against origin/main
 
       - name: plugin copy is in sync with the root skill
