@@ -46,9 +46,9 @@ The proven recipe:
 | 🕹️ **A cute arcade/pixel aesthetic** | Dark bg, neon bars, fairy-dust palette, animated fills. Opens straight from `file://` — no build step, no server, no dependencies. Just `open` it. |
 | 🎨 **Three reader-switchable themes** | A 🎮/📄/🌌 toggle (top-right; it remembers the choice): **arcade** (default), a print-friendly **paper** light theme, and **midnight**. First visit follows the reader's OS light/dark preference — a light-mode boss lands on paper, not a dark arcade. Print it clean. |
 | 🖼️ **A metaphor-illustration slot** | An optional `figure.figure` component: one inline-SVG pixel scene of the metaphor (the chef re-chopping onions *while the oven sits off*). Every fill is a CSS variable so the art recolours itself across all three themes and print. Rule: the picture must carry the bad news too. Pairs perfectly with the [pixel-art](https://github.com/wan-huiyan/pixel-art) skill. |
-| 🔎 **A bundled fact-verifier** | Translation drifts. A separate verifier ([`references/fact-verifier.md`](references/fact-verifier.md)) checks every plain claim, number, and the metaphor against the technical source — number-binding, magnitude/causal/metaphor drift, omissions — and **fails loud** when it can't find the basis. Reduces drift; doesn't replace a human skim. |
+| 🔎 **A bundled fact-verifier** | Translation drifts. A separate verifier ([`references/fact-verifier.md`](references/fact-verifier.md)) checks every plain claim, number, and the metaphor against the technical source — number-binding, magnitude/causal/metaphor drift, omissions **in both directions** (dropping a reassuring fact leaves the report scarier than its source, and that is drift too), and completion claims against real state rather than prose — and **fails loud** when it can't find the basis. Reduces drift; doesn't replace a human skim. |
 
-It ships a **proven HTML template** ([`assets/template.html`](assets/template.html)) you copy and re-bind, plus a **render-safety checker** ([`scripts/check_html.py`](scripts/check_html.py)) that catches the silent "half the page is invisible" CSS-variable bug — and also verifies theme parity across all three themes, that the page stays truly self-contained (no render-time network fetches), and that every figure has a text alternative and no theme-breaking hardcoded colours — before anyone opens it.
+It ships a **proven HTML template** ([`assets/template.html`](assets/template.html)) you copy and re-bind, plus a **render-safety checker** ([`scripts/check_html.py`](scripts/check_html.py)) that catches the silent "half the page is invisible" CSS-variable bug — and also verifies theme parity across all three themes, that the page stays truly self-contained (no render-time network fetches), and that every figure has a text alternative and no theme-breaking hardcoded colours — before anyone opens it. It checks the page's **structure**: it does not parse attribute values, execute the page, or lay it out.
 
 ---
 
@@ -126,7 +126,7 @@ The "Without" column isn't a strawman — a markdown summary is a perfectly reas
 | 4. **Write plain** | Short sentences, second person. Name a thing once in metaphor, then reuse it. Jargon → cut it or move it to an engineer's note. |
 | 5. **Pair every claim with evidence** | A labelled bar or a stat tile. Never invent a number to fill a tile. |
 | 6. **Illustrate the metaphor** *(optional)* | One inline-SVG figure — pixel `<rect>`s on a 7px grid, every fill a `var(--x)`, the bad news drawn in. Skip it freely; text-first. |
-| 7. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. |
+| 7. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. Structure only: for anything interactive, or the page's width on a phone, load it in a browser. |
 | 8. **Open it** | `open` (macOS) / `xdg-open` (Linux) / `start` (Windows) `your-report.html` so the user sees it immediately. |
 
 ---
@@ -154,13 +154,14 @@ Honesty box for the skill itself (of course it has one):
 - **A forced metaphor can mislead.** If the everyday image only fits the good parts and you stretch it over the bad parts, you'll distort the meaning. The fix is to pick a *different* metaphor, not to abandon the metaphor mid-report. Two candidates in your head; keep the one that carries the whole story.
 - **Static HTML, by design.** No live data, no interactivity beyond the CSS bar animation, no dashboard. That's a feature (it opens anywhere from `file://`), but it's not a tool for live monitoring.
 - **`check_html.py` is a render-safety net, not a fact-checker.** It catches invisible text and broken tags; it cannot tell you whether your numbers are right or your metaphor is honest. That part's on you.
+- **And it validates the page's structure, not the page working.** It does not parse attribute values and it does not execute the page. Measured: on a page whose one interactive widget was dead because of an unescaped apostrophe inside an attribute, it returned the same CLEAN verdict as on the working page. A pass is "the structure is sound", nothing more — it now says so in its own output.
 
 ---
 
 ## 🧩 Dependencies
 
 - **Required:** nothing. The output is a single self-contained HTML file (inline CSS, no external fonts, no build, no server — just one tiny inline script for the theme toggle) — it opens in any browser straight from disk.
-- **Optional:** `python3` for the render-safety check (`scripts/check_html.py`). Without it you lose the automated invisible-text guard but the skill still works.
+- **Optional:** `python3` for the render-safety check (`scripts/check_html.py`). Without it you lose the automated invisible-text guard but the skill still works. A browser is optional too, and it is the only thing that can tell you the page runs and fits.
 
 ---
 
@@ -175,7 +176,8 @@ Honesty box for the skill itself (of course it has one):
 - If it corrects an earlier claim (even your own), it says so plainly.
 - No invented numbers to fill a tile.
 - If there's an illustration: inline SVG only, theme-var colours, the bad news drawn in, and an `aria-label` so it's not invisible to screen readers.
-- Passes `check_html.py`: balanced tags, every CSS var defined, theme parity across 🎮/📄/🌌, self-contained (no render-time network), figures labelled, no hardcoded colours, no leftover `__PLACEHOLDER__`.
+- Passes `check_html.py`: balanced tags, every CSS var defined, theme parity across 🎮/📄/🌌, self-contained (no render-time network), figures labelled, no hardcoded colours, no leftover `__PLACEHOLDER__`. (Structure only — it does not parse attribute values or run the page.)
+- The fact-verifier ran and its **omission list has entries pointing both ways**, or you know why it doesn't; every "done"/"merged"/"cleared out" was checked against real state, not against a document describing the work.
 
 </details>
 
@@ -189,6 +191,16 @@ Honesty box for the skill itself (of course it has one):
 ---
 
 ## 📜 Version History
+
+- **v2.3.0** (2026-08-07) — **the fact-verifier was blind to what a report leaves out.** Six changes:
+  - **Omissions count in both directions** (check 5). Dropping a caveat was the only kind it named. Dropping a *reassuring* fact leaves the report scarier than its own source, and two passes over one real report missed the same two instances.
+  - **Omissions get their own output rows, with a verdict.** An omission has no claim to quote, so it fell straight through a table of quoted claims.
+  - **New check 9 — "done" is checked against real state, never prose.** A source describing a clean-up reads as support for "was cleared out" while the pull request doing it is still open. The dispatch prompt gained a third input saying where that state is.
+  - **`check_html.py` states its limits in its own pass line.** It checks structure, so it cannot see a broken attribute value, a page that fails to run, or one that runs off the side of a phone.
+  - **Template layout fix** for the last of those: a long file path in a receipts cell had nowhere to break, and two real reports came out **527px and 691px wide inside a 390px viewport**.
+  - **New `tests/check_versions.py` in CI** — the four version fields must agree, and against a base ref, shipped content must actually have been bumped.
+
+  **It also restores 41 lines that were never published.** A local plugin cache labelled 2.2.0 held the whole *"if the report asks the reader anything, make it tickable"* preference; no branch or release in this repository carried it, so the next plugin update would have deleted it.
 
 - **v2.2.0** (2026-07-08) — the fact-verifier now names two drift modes it was missing: **sub-group / category mis-binding** (a real number bound to the wrong subset) and **invented scope qualifiers** (a `per-session` / `per-run` / "every" the source never stated); its framing is sharpened to *fidelity-to-your-source* (not world-truth); SKILL.md now flags that **the metaphor/prose layer is itself a drift surface** (keep the metaphor light on number-dense findings; let engineer's-notes carry sub-group boundaries); README lede repositioned to lead with the honesty/anti-drift discipline; added an **honest self-test** section. All grounded in an n=1 A/B pilot.
 - **v2.1.0** (2026-07-03) — a **metaphor-illustration slot** (`figure.figure`: inline-SVG pixel scenes, theme-var colours, "the picture carries the bad news too" — with a [pixel-art](https://github.com/wan-huiyan/pixel-art) integration path); themes now **auto-detect the reader's OS light/dark preference** on first visit; `check_html.py` grew four checks (theme parity, self-contained guard, figure text-alternatives, hardcoded-colour detection); the fact-verifier now checks **figure captions** for drift; accessible bar charts (`aria-label`s); cross-platform open instructions; a `sync-plugin.sh` + CI guard so the plugin copy can't drift from the root skill.

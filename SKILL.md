@@ -16,8 +16,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.2.0
-date: 2026-07-08
+version: 2.3.0
+date: 2026-08-07
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -35,7 +35,8 @@ asides and the real numbers and find nothing dumbed-down to the point of being *
 on both sides is the same: a report that's either (a) so simplified it's misleading, or (b) so technical
 the intended reader bounces. You're threading that needle.
 
-When this fits: the user has just done or received something technical (a debugging session, a research
+**If the report ends in a decision the reader must make, it gets `promptback` widgets — standing
+preference, see the section below.** When this fits: the user has just done or received something technical (a debugging session, a research
 finding, a measurement, an analysis doc, a migration) and wants it **understandable and shareable**.
 When it doesn't: they want the rigorous internal write-up (that's a normal analysis doc), or a live
 dashboard (different tool), or slides for a pitch (a deck skill).
@@ -135,6 +136,37 @@ The `assets/template.html` shell, top to bottom — re-bind the content, keep th
 Not every report needs all nine — drop what doesn't apply (a pure findings recap may skip 3 and 5). Keep
 the order; it's the reading rhythm.
 
+## If the report ASKS the reader anything, make it tickable — use `promptback` (standing preference)
+
+**Owner's standing preference, set 2026-08-06: any show-and-tell that ends in a decision the reader has
+to make gets `promptback` widgets. Do not ship a decisions section the reader has to retype answers to.**
+
+The trigger is narrow and mechanical: **does the page contain a question only the reader can answer?**
+A findings recap with no ask stays a flat page — adding widgets to it is noise. But the moment there is
+a "should we…", an options list, or a "waiting on you", the reader is being asked to produce structured
+output from unstructured reading, and a flat page makes them do that from memory in a chat box.
+
+Load `promptback` and follow it; the pieces that matter here:
+
+- **One widget per question**, immediately under that question's own context — not collected into a form
+  at the end. The reader decides while the argument is still in front of them.
+- **Question-specific chips**, never generic approve/revise. The copied prompt should read
+  `[MUZZLE-AND-TAIL]`, not `[APPROVE]`.
+- **The token in the chip must be decoded, verbatim, in the widget's own meaning line AND in the copied
+  prompt's "Meaning of ticks" section.** On a recommendation-shaped question a bare `[YES]` is ambiguous
+  to the receiving session — yes to the change, or yes to the status quo the report defended? A page
+  shipped 2026-08-06 had a chip whose value was `both` against a legend that only said "Muzzle + tail";
+  the token and its key never met, and only a test caught it.
+- **Keep the narrative order.** `promptback` says put decision items first, and that is right for a pure
+  triage page. It is wrong here: an explainer earns its decisions by explaining first. Reconcile the two
+  with the fixed dock — it is visible from the top of the page and carries the answered count, so the
+  reader always knows there is something to do without the page being reordered around it.
+
+**And the honesty rule still outranks the widget.** If a question is no longer the reader's to answer —
+someone else picked it up, or it got settled while you were writing — delete the widget and say so in
+plain text. A tickable question that is already being worked on wastes the one thing the page is
+spending: their attention.
+
 ## How to build one
 1. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
    numbers, the bottom line, the limits, and what was produced. Don't proceed on a vague understanding —
@@ -156,7 +188,14 @@ the order; it's the reading rhythm.
 7. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
    A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
    captions/aria-labels in what gets checked.
-8. **Verify the render** (below) — a broken CSS variable silently turns text invisible.
+8. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **If you added
+   promptback widgets, verify them by DRIVING them, not by reading the HTML** — the copied text is
+   assembled at runtime from hand-written `data-` attributes, and a chip that fails to persist or a key
+   with a hole in it looks perfect on screen. Chrome is not always reachable (the extension was down the
+   day this was written), so prefer a headless harness that loads the page's own script into a fake DOM
+   over a browser check that may not be runnable. The harness needs to do three things: run the page's
+   own `<script>` against a minimal DOM, drive a chip and a note, and assert the copied text contains
+   the token AND its decoding. Wire it into your repo's test suite so it keeps running.
 9. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
    `start <file>.html` (Windows). In a remote/web session where you can't open a browser for them,
    send/attach the file instead — it works the moment they double-click it.
@@ -170,7 +209,20 @@ technical source AND your report. The reusable prompt + the exact checks live in
 `references/fact-verifier.md` — it checks number-binding (not just presence), magnitude/causal/metaphor
 drift, and material omissions, and it **fails loud** when a claim has no locatable basis (an
 "I-couldn't-verify" is a flag, never a silent pass). Fix every DRIFT/FABRICATED/UNVERIFIABLE before
-delivering. *Honest limit: an LLM checking an LLM reduces drift, it doesn't eliminate it — for
+delivering.
+
+Two of its checks exist because the verifier itself missed them on real work, and they are the two
+easiest to skim past:
+
+- **Omissions count in BOTH directions** (check 5). Dropping a caveat is the one everyone looks for.
+  Dropping a *reassuring* fact the source stated leaves the report more alarming than its own
+  source, and nobody's instinct flags it — a scarier report feels like the safe way to be wrong.
+  The verifier now lists omissions separately from the per-claim table, because an omission has no
+  claim to quote and falls straight through a table of quotes.
+- **"Done" is checked against real state, not against prose** (check 9). A source that describes the
+  clean-up reads as support for "was cleared out" while the pull request doing it is still open.
+
+*Honest limit: an LLM checking an LLM reduces drift, it doesn't eliminate it — for
 high-stakes reports a human still skims the source-vs-claim table.*
 
 ## Verify the render WITHOUT a screenshot
@@ -193,6 +245,21 @@ figures have text alternatives (`alt`/`aria-label`) and no hardcoded hex colours
 theme switcher; and no `__PLACEHOLDER__` slot was left unfilled. For a true visual check, `open`/
 `xdg-open`/`start` the file, or serve the directory on a port and use `browser_evaluate` (file:// is
 blocked in the MCP browser) — but the static check covers the silent-failure cases.
+
+**Read a pass as exactly what it is.** `check_html.py` validates the page's *structure*. It does
+**not** parse attribute values, it does **not** execute the page, and it does **not** lay the page
+out — so a page can pass it with its interactive half dead or its content running off the side of a
+phone. Two measured examples:
+
+- On a page this checker otherwise passes, one widget whose options sat in a single-quoted
+  attribute containing an unescaped apostrophe rendered with **no working widget at all**, and
+  `check_html.py` returned **exit 0, CLEAN** — the same verdict, word for word, as on the working
+  page. (Its two reports differ only in the filename it echoes back on line 1.)
+- A long file path in a receipts cell has nowhere to break, so it pushes the whole page sideways.
+  Two real reports measured **527px and 691px wide inside a 390px viewport**. Fixed in the template
+  as of v2.3.0, but the general point stands: **load the page and read `document.documentElement
+  .scrollWidth` against `clientWidth` at 390px** before you hand it over. A screenshot will not tell
+  you — headless Chrome has a ~500px floor, so a "390px" picture is a crop of a 500px layout.
 
 ## Worked example
 The skill was extracted from a report that explained a retrieval-system investigation using a "robot

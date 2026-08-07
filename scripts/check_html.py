@@ -13,6 +13,18 @@ Catches the silent-failure cases that make a page open broken:
   5. Illustrations without a text alternative (<img> missing alt, <svg> with no aria) and
      hardcoded colours in the body (fill="#..."), which won't follow the theme switcher.
 
+WHAT IT DOES NOT CATCH — a pass means "the structure is sound", not "the page works":
+  * It does not PARSE ATTRIBUTE VALUES. A truncated or malformed attribute leaves the tags
+    balanced, so this exits 0. Measured: on a page this script otherwise passes, one widget
+    with an unescaped apostrophe inside a single-quoted attribute rendered with no working
+    widget at all and this still exited 0 CLEAN — the same verdict word for word as on the
+    working page, differing only in the filename echoed on line 1.
+  * It does not EXECUTE the page. No script error, no dead button, no failed fetch.
+  * It does not check the CONTENT — whether the words are true, or match the source. That
+    is what references/fact-verifier.md is for.
+If your page carries content inside an attribute, or any behaviour at all, verify that
+separately: parse the attribute back out, or load the page.
+
 HTML comments and CSS /* */ comments are stripped before analysis — a comment can't break a
 render, and the template documents its rules in comments.
 
@@ -138,6 +150,8 @@ def main():
         sys.exit(1)
     print("  ✓ tags balanced · all CSS vars defined · themes in parity · self-contained ·"
           " figures labelled · no hardcoded colours · no leftover placeholders")
+    print("  ⚠ NOT checked: attribute VALUES (a broken one leaves the tags balanced), the"
+          " page EXECUTING, and whether the content is true — check those separately")
     sys.exit(0)
 
 if __name__ == "__main__":
