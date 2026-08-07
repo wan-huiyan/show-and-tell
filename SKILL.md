@@ -35,7 +35,8 @@ asides and the real numbers and find nothing dumbed-down to the point of being *
 on both sides is the same: a report that's either (a) so simplified it's misleading, or (b) so technical
 the intended reader bounces. You're threading that needle.
 
-When this fits: the user has just done or received something technical (a debugging session, a research
+**If the report ends in a decision the reader must make, it gets `promptback` widgets — standing
+preference, see the section below.** When this fits: the user has just done or received something technical (a debugging session, a research
 finding, a measurement, an analysis doc, a migration) and wants it **understandable and shareable**.
 When it doesn't: they want the rigorous internal write-up (that's a normal analysis doc), or a live
 dashboard (different tool), or slides for a pitch (a deck skill).
@@ -135,6 +136,37 @@ The `assets/template.html` shell, top to bottom — re-bind the content, keep th
 Not every report needs all nine — drop what doesn't apply (a pure findings recap may skip 3 and 5). Keep
 the order; it's the reading rhythm.
 
+## If the report ASKS the reader anything, make it tickable — use `promptback` (standing preference)
+
+**Owner's standing preference, set 2026-08-06: any show-and-tell that ends in a decision the reader has
+to make gets `promptback` widgets. Do not ship a decisions section the reader has to retype answers to.**
+
+The trigger is narrow and mechanical: **does the page contain a question only the reader can answer?**
+A findings recap with no ask stays a flat page — adding widgets to it is noise. But the moment there is
+a "should we…", an options list, or a "waiting on you", the reader is being asked to produce structured
+output from unstructured reading, and a flat page makes them do that from memory in a chat box.
+
+Load `promptback` and follow it; the pieces that matter here:
+
+- **One widget per question**, immediately under that question's own context — not collected into a form
+  at the end. The reader decides while the argument is still in front of them.
+- **Question-specific chips**, never generic approve/revise. The copied prompt should read
+  `[MUZZLE-AND-TAIL]`, not `[APPROVE]`.
+- **The token in the chip must be decoded, verbatim, in the widget's own meaning line AND in the copied
+  prompt's "Meaning of ticks" section.** On a recommendation-shaped question a bare `[YES]` is ambiguous
+  to the receiving session — yes to the change, or yes to the status quo the report defended? A page
+  shipped 2026-08-06 had a chip whose value was `both` against a legend that only said "Muzzle + tail";
+  the token and its key never met, and only a test caught it.
+- **Keep the narrative order.** `promptback` says put decision items first, and that is right for a pure
+  triage page. It is wrong here: an explainer earns its decisions by explaining first. Reconcile the two
+  with the fixed dock — it is visible from the top of the page and carries the answered count, so the
+  reader always knows there is something to do without the page being reordered around it.
+
+**And the honesty rule still outranks the widget.** If a question is no longer the reader's to answer —
+someone else picked it up, or it got settled while you were writing — delete the widget and say so in
+plain text. A tickable question that is already being worked on wastes the one thing the page is
+spending: their attention.
+
 ## How to build one
 1. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
    numbers, the bottom line, the limits, and what was produced. Don't proceed on a vague understanding —
@@ -156,7 +188,13 @@ the order; it's the reading rhythm.
 7. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
    A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
    captions/aria-labels in what gets checked.
-8. **Verify the render** (below) — a broken CSS variable silently turns text invisible.
+8. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **If you added
+   promptback widgets, verify them by DRIVING them, not by reading the HTML** — the copied text is
+   assembled at runtime from hand-written `data-` attributes, and a chip that fails to persist or a key
+   with a hole in it looks perfect on screen. Chrome is not always reachable (the extension was down the
+   day this was written), so prefer a headless harness that loads the page's own script into a fake DOM
+   over a browser check that may not be runnable — see `docs/deliverables/scripts/promptback_shell.test.cjs`
+   in DoodleRun for a worked one, and wire it into the repo's suites so it keeps running.
 9. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
    `start <file>.html` (Windows). In a remote/web session where you can't open a browser for them,
    send/attach the file instead — it works the moment they double-click it.
