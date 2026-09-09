@@ -16,8 +16,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.3.0
-date: 2026-08-07
+version: 2.4.0
+date: 2026-09-09
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -168,27 +168,38 @@ plain text. A tickable question that is already being worked on wastes the one t
 spending: their attention.
 
 ## How to build one
-1. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
+1. **Run an eli5 framing pass first.** Before touching the source material, do a quick, throwaway pass in
+   the style of the `eli5` skill (github.com/anthropics/claude-plugins-community — installed as
+   `eli5@claude-community`): explain the topic to yourself as if to someone who knows nothing, in a
+   couple of sentences, picture-first, no jargon. Don't ship this pass — it's a forcing function, not a
+   deliverable. Its only job is to surface the load-bearing metaphor and the single sentence a total
+   outsider would need, before the real numbers and caveats have a chance to pull your language back
+   toward jargon. If the eli5-style framing can't find one clean picture for the topic, that's a signal
+   the topic needs splitting into more than one report, or more than one figure — better to learn that
+   now than after the honesty box is written.
+2. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
    numbers, the bottom line, the limits, and what was produced. Don't proceed on a vague understanding —
    the report is only as honest as your grasp of the facts.
-2. **Choose the metaphor** (see above). Sanity-check it carries the bad news too.
-3. **Copy `assets/template.html`** to your output path and re-bind each slot. Keep the entire `<style>`
+3. **Choose the metaphor** (see above), starting from what the framing pass in step 1 surfaced — keep it
+   if it survives contact with the real numbers and the bad news, swap it if it doesn't. Sanity-check it
+   carries the bad news too.
+4. **Copy `assets/template.html`** to your output path and re-bind each slot. Keep the entire `<style>`
    block + the small theme `<script>` as-is — it's a CSS-variable theme system: arcade (default, dark/
    pixel/fairy-dust) plus **paper** (light, print-friendly) and **midnight**, reader-switchable via the
    top-right 🎮/📄/🌌 toggle. First visit follows the reader's OS light/dark preference (light-mode
    readers get paper); an explicit click is remembered; print forces a clean light theme. Edit
    content, not CSS — and never hardcode
    a colour; every colour is a `--var` so all three themes stay correct.
-4. **Write plain.** Short sentences. Second person. Name a thing once in metaphor, then reuse it. If a
+5. **Write plain.** Short sentences. Second person. Name a thing once in metaphor, then reuse it. If a
    sentence has a piece of jargon the audience won't know, either cut it or move it to an engineer's note.
-5. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
+6. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
    keep.
-6. **Optionally illustrate the metaphor** (see *Illustrate the metaphor*) — one inline-SVG figure,
+7. **Optionally illustrate the metaphor** (see *Illustrate the metaphor*) — one inline-SVG figure,
    theme-var colours, bad news included, or no figure at all.
-7. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
+8. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
    A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
    captions/aria-labels in what gets checked.
-8. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **If you added
+9. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **If you added
    promptback widgets, verify them by DRIVING them, not by reading the HTML** — the copied text is
    assembled at runtime from hand-written `data-` attributes, and a chip that fails to persist or a key
    with a hole in it looks perfect on screen. Chrome is not always reachable (the extension was down the
@@ -196,7 +207,7 @@ spending: their attention.
    over a browser check that may not be runnable. The harness needs to do three things: run the page's
    own `<script>` against a minimal DOM, drive a chip and a note, and assert the copied text contains
    the token AND its decoding. Wire it into your repo's test suite so it keeps running.
-9. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
+10. **Open it** for the user: `open <file>.html` (macOS), `xdg-open <file>.html` (Linux), or
    `start <file>.html` (Windows). In a remote/web session where you can't open a browser for them,
    send/attach the file instead — it works the moment they double-click it.
 
