@@ -120,14 +120,15 @@ The "Without" column isn't a strawman — a markdown summary is a perfectly reas
 
 | Step | What happens |
 |---|---|
-| 1. **Read the source** | Extract the real numbers, the bottom line, the limits, what was produced. The report is only as honest as your grasp of the facts. |
-| 2. **Choose the metaphor** | Everyday and concrete (kitchen, librarian, mail room). Sanity-check it carries the bad news too — if it can only express the wins, it's the wrong metaphor. |
-| 3. **Copy the template** | [`assets/template.html`](assets/template.html). Keep the `<style>` block as-is (proven arcade theme); re-bind the content slots. |
-| 4. **Write plain** | Short sentences, second person. Name a thing once in metaphor, then reuse it. Jargon → cut it or move it to an engineer's note. |
-| 5. **Pair every claim with evidence** | A labelled bar or a stat tile. Never invent a number to fill a tile. |
-| 6. **Illustrate the metaphor** *(optional)* | One inline-SVG figure — pixel `<rect>`s on a 7px grid, every fill a `var(--x)`, the bad news drawn in. Skip it freely; text-first. |
-| 7. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. Structure only: for anything interactive, or the page's width on a phone, load it in a browser. |
-| 8. **Open it** | `open` (macOS) / `xdg-open` (Linux) / `start` (Windows) `your-report.html` so the user sees it immediately. |
+| 1. **eli5 framing pass** | A throwaway warm-up in the style of the [eli5](https://github.com/anthropics/claude-plugins-community/tree/main/eli5) skill: explain the topic picture-first, no jargon, to someone who knows nothing. Nothing from this pass ships — it exists to surface the metaphor before the numbers pull the language back toward jargon. |
+| 2. **Read the source** | Extract the real numbers, the bottom line, the limits, what was produced. The report is only as honest as your grasp of the facts. |
+| 3. **Choose the metaphor** | Start from what the framing pass surfaced; keep it if it survives the real numbers and the bad news. Everyday and concrete (kitchen, librarian, mail room) — if it can only express the wins, it's the wrong metaphor. |
+| 4. **Copy the template** | [`assets/template.html`](assets/template.html). Keep the `<style>` block as-is (proven arcade theme); re-bind the content slots. |
+| 5. **Write plain** | Short sentences, second person. Name a thing once in metaphor, then reuse it. Jargon → cut it or move it to an engineer's note. |
+| 6. **Pair every claim with evidence** | A labelled bar or a stat tile. Never invent a number to fill a tile. |
+| 7. **Illustrate the metaphor** *(optional)* | One inline-SVG figure — pixel `<rect>`s on a 7px grid, every fill a `var(--x)`, the bad news drawn in. Skip it freely; text-first. |
+| 8. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. Structure only: for anything interactive, or the page's width on a phone, load it in a browser. |
+| 9. **Open it** | `open` (macOS) / `xdg-open` (Linux) / `start` (Windows) `your-report.html` so the user sees it immediately. |
 
 ---
 
@@ -187,10 +188,13 @@ Honesty box for the skill itself (of course it has one):
 
 - **[publish-skill](https://github.com/wan-huiyan/publish-skill)** — the skill used to package and ship this repo.
 - **[pixel-art](https://github.com/wan-huiyan/pixel-art)** — drew the banner mascot above, and the recommended companion for the metaphor-illustration slot: its `<rect>`-on-a-7px-grid SVG characters drop straight into `figure.figure` (swap literal colours for theme vars).
+- **[eli5](https://github.com/anthropics/claude-plugins-community/tree/main/eli5)** — the warm-up. Step 1 of the build is an eli5-style picture-first pass, done to find the metaphor before the report is written. eli5 on its own is also the right tool when there is no source document to be faithful to and you just want a topic explained simply.
 
 ---
 
 ## 📜 Version History
+
+- **v2.4.0** (2026-09-09) — **an eli5 framing pass is now step 1 of the build.** Before reading the source, do a throwaway picture-first explanation in the style of the [eli5](https://github.com/anthropics/claude-plugins-community/tree/main/eli5) skill: no jargon, aimed at someone who knows nothing. Nothing from it ships. Its job is to surface the metaphor the whole report will hang on, the one sentence an outsider needs, and the one scene you would draw — *before* the real numbers and caveats pull the language back toward jargon. It also reveals early when a topic has no single clean picture, which means it wants splitting into more than one report or figure. Step 3 (choose the metaphor) now starts from what the pass surfaced rather than from a blank page. The build list and the README's "How it works" table are renumbered accordingly; no behaviour changed in the template, the fact-verifier, or `check_html.py`.
 
 - **v2.3.0** (2026-08-07) — **the fact-verifier was blind to what a report leaves out.** Six changes:
   - **Omissions count in both directions** (check 5). Dropping a caveat was the only kind it named. Dropping a *reassuring* fact leaves the report scarier than its own source, and two passes over one real report missed the same two instances.
