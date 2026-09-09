@@ -171,12 +171,13 @@ spending: their attention.
 1. **Run an eli5 framing pass first.** Before touching the source material, do a quick, throwaway pass in
    the style of the `eli5` skill (github.com/anthropics/claude-plugins-community — installed as
    `eli5@claude-community`): explain the topic to yourself as if to someone who knows nothing, in a
-   couple of sentences, picture-first, no jargon. Don't ship this pass — it's a forcing function, not a
-   deliverable. Its only job is to surface the load-bearing metaphor and the single sentence a total
-   outsider would need, before the real numbers and caveats have a chance to pull your language back
-   toward jargon. If the eli5-style framing can't find one clean picture for the topic, that's a signal
-   the topic needs splitting into more than one report, or more than one figure — better to learn that
-   now than after the honesty box is written.
+   couple of sentences, picture-first, no jargon. Borrow the brief, don't invoke `/eli5` itself — that
+   skill builds its own finished HTML artifact, and this pass is a warm-up you throw away. Its only job
+   is to surface three things before the real numbers and caveats pull your language back toward jargon:
+   the metaphor the whole report will hang on, the single sentence a total outsider would need, and the
+   one scene you would draw (which feeds the figure in step 7). If this framing can't find one clean
+   picture for the topic, that's a signal the topic needs splitting into more than one report, or more
+   than one figure — better to learn that now than after the honesty box is written.
 2. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
    numbers, the bottom line, the limits, and what was produced. Don't proceed on a vague understanding —
    the report is only as honest as your grasp of the facts.
