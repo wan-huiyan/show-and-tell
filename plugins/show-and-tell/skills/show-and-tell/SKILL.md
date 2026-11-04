@@ -5,7 +5,7 @@ description: >
   document into a genuinely PLAIN-ENGLISH self-contained HTML explainer a non-technical or busy
   stakeholder can actually understand AND trust — built on a single everyday metaphor carried through
   the whole piece (the bad news included), picture-first with a hard word budget (every finding drawn
-  as the claim itself, animated only when the point is a change), with the REAL numbers shown honestly
+  however shows it best — scenes, cartoons, diagrams — animated only when the point is a change), with the REAL numbers shown honestly
   beside each plain claim, an "engineer's note" layer so technical readers aren't shortchanged, a foregrounded
   honesty/limits box, and a bundled FACT-VERIFIER that checks every claim, number, and metaphor back
   against the source document to catch translation drift before anyone reads it (self-contained, opens
@@ -93,26 +93,34 @@ where the plain version genuinely loses something a technical reader would want 
 
 ## Pictures first, few words — the eli5 rule
 The reader looks before they read, and most stop reading early. Borrowed from the `eli5` skill's brief
-— *big pictures, few words* — and enforced:
+— *big pictures, few words*. Like eli5, **the drawing method is yours to choose.** Draw whatever makes
+this finding land: a scene with characters, a cartoon, a cutaway, a map, a comic strip, a machine
+with its parts labelled, a before/after pair, a crowd of little people, emoji arranged into a picture,
+CSS art, a canvas sketch, a chart if a chart is truly clearest. Pictures are big — give a strong one
+the full width. Don't default to a bar chart or a row of boxes because they are easy; that is the
+spreadsheet coming back in through the side door.
 
-- **Every finding gets a picture, and the picture IS the finding**, not the metaphor's scenery. A chef
-  standing in a kitchen shows the setting; ten trays with seven stamped "done again" shows the claim.
-  Write the finding as one sentence first, then draw that sentence as a **count** (7 of 10), a
-  **comparison** (two bars against the line that matters), or a **cause** (one switch wired to every
-  lamp, switched off).
+Only these rules are fixed, because each one protects the reader:
+
+- **The picture shows the finding, not just the setting.** A chef standing in a kitchen is scenery; the
+  same chef wearily re-chopping a pile of onions stamped "yesterday's", while the shiny oven behind
+  them sits unplugged, is the finding. Write the finding as one sentence first, then draw that
+  sentence.
 - **Cover test.** Hide the caption. Can someone say the finding from the picture alone? If not, redraw
-  — don't add words.
-- **Few marks, ≤3 words per label**, placed next to the thing they name. No legends. The caption is
-  one short sentence carrying the number.
+  — don't add words. Labels inside the picture are fine; keep them short.
 - **The picture carries the bad news too.** If the catch isn't drawn, it sits right under the picture.
-  An estimate is drawn as one (dashed, "est."), never as solid as a measurement. If you can't draw the
-  catch in, the picture is overselling — change it.
+  An estimate looks like one (dashed, faded, "est."), never as solid as a measurement. If you can't
+  draw the catch in, the picture is overselling — change it.
+- **Numbers drawn are numbers claimed.** If the picture shows a quantity (7 of 10 trays, a bar's
+  length), it must match the source, and the caption states the real figure.
 - **The `aria-label` is the one-sentence finding**, so a screen reader — and the fact-verifier — get the
   claim, not a description of a scene.
-- **Inline SVG only, every fill/stroke a `var(--x)`** — no `<img src>`, no external files, so the page
-  still opens from `file://` and follows the 🎮/📄/🌌 theme toggle. `role="img"` on the `<figure>`, the
-  inner `<svg>` `aria-hidden`. (`check_html.py` enforces all of this.) Pixel style suits the arcade
-  theme; clarity beats style.
+- **Self-contained.** The page must open from `file://` with no network: inline SVG, CSS, canvas, emoji,
+  or `data:` images are all fine; nothing fetched at render time.
+- **Readable in every theme.** Use the theme `var(--x)` colours and the drawing follows the 🎮/📄/🌌
+  toggle by itself. If the picture needs its own palette (skin tones, a sunset, a gradient), give the
+  figure `data-palette="own"` and draw it on its own background inside the figure so its contrast never
+  depends on the theme — `check_html.py` then allows hardcoded colours inside that figure only.
 - **Fact-check the picture like a claim.** A drawing drifts exactly like prose. Feed captions and
   aria-labels to the fact-verifier with the report text.
 
@@ -219,7 +227,7 @@ spending: their attention.
    reuse it. Stay inside the word budget; jargon and method go in a collapsed engineer's note.
 6. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
    keep.
-7. **Draw each finding** (see *Pictures first*) — the picture is the claim, the cover test passes,
+7. **Draw each finding** (see *Pictures first*) — any method that lands; the cover test passes and
    the catch is drawn. Animate it only if the finding is a change.
 8. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
    A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
@@ -305,7 +313,9 @@ librarian" metaphor — recall shown as "finds it ~51%," precision as "interrupt
 engineer's notes, an honesty box, and a correction of an earlier false claim. The template carries a
 *different* worked example (a slow nightly job, as a "kitchen") so you can see the recipe generalize:
 223 visible words, two pictures (seven of ten trays "done again"; tonight's run vs the estimate
-against the 6am bell), both animated, both readable as a still.
+against the 6am bell), both animated, both readable as a still. Those two are deliberately simple
+so the mechanics are easy to read — they are one style, not the house style. Draw yours however
+the finding is clearest.
 Read `assets/template.html` top to bottom once before your first build — the inline comments mark each
 slot and the intent behind it.
 

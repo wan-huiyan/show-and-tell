@@ -11,7 +11,8 @@ Catches the silent-failure cases that make a page open broken:
   4. Render-time network references (external <img>/<script>/<link>/@import/url(http...)) ->
      breaks the "opens from file://, no network" promise. Plain <a href> links are fine.
   5. Illustrations without a text alternative (<img> missing alt, <svg> with no aria) and
-     hardcoded colours in the body (fill="#..."), which won't follow the theme switcher;
+     hardcoded colours in the body (fill="#..."), which won't follow the theme switcher —
+     except inside a <figure data-palette="own">, which brings its own background;
      @keyframes with no prefers-reduced-motion rule.
   6. Too many words: more than 60 visible words in the hero or any <section>, or more than
      350 on the page. Engineer's notes, tables, SVG and the footer don't count.
@@ -135,6 +136,9 @@ def main():
 
     # 5b) hardcoded colours in the body break the 🎮/📄/🌌 theme switcher (and print)
     body_html = re.sub(r"<style>.*?</style>", "", html, flags=re.S)
+    # ...except inside a <figure data-palette="own">, which draws on its own background so its
+    # contrast doesn't depend on the theme (skin tones, sunsets, gradients).
+    body_html = re.sub(r'<figure\b[^>]*data-palette=["\']own["\'][^>]*>.*?</figure>', " ", body_html, flags=re.S)
     hard = set(re.findall(r'(?:fill|stroke|stop-color)\s*=\s*["\']\s*(#[0-9a-fA-F]{3,8})\b', body_html))
     hard |= set(re.findall(r'style\s*=\s*["\'][^"\']*(?:color|background[^:;"\']*|fill|stroke)\s*:\s*(#[0-9a-fA-F]{3,8})\b', body_html))
     if hard:
