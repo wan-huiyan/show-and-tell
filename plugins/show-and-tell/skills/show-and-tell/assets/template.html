@@ -14,7 +14,7 @@
        Print forces a clean light theme. Leave the :root values alone and it looks unchanged.
      Components: .pill(.green/.warn) · .tiles>.tile(.t-flame/neon/coin/violet/pink/good/warn) ·
        .bar-row>.track>.fill(.good/bad/mid) · .callout(.aha/.good) · .two · ul.tight ·
-       .eng (engineer's note) · figure.figure (inline-SVG metaphor illustration; fills = var(--x)
+       details.eng (collapsible engineer's note) · figure.figure(.animated) (the picture IS the finding; fills = var(--x)
        only) · ul.chk>li(.d=done) · table · .meta · .big
      ===================================================================================== -->
 <style>
@@ -54,6 +54,10 @@
     --good-d:#2a8f7a;--good-b:#5ee0c8;--bad-d:#b0341e;--bad-b:#ff7a59;--mid-d:#c98a1e;--mid-b:#ffd166;
     --call-bd:#3a2a5e;--call-bg:#161033;--eng:#9197c8;--hair:#1a2147;
   }
+  /* ===== motion tokens (from the `animate` skill's table — don't invent curves). A second plain
+     :root on purpose: they don't change per theme, and check_html's theme-parity check only
+     compares colour themes against the FIRST :root. ===== */
+  :root{--ease-out:cubic-bezier(0.23, 1, 0.32, 1)}
   *{box-sizing:border-box}
   body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,var(--glow1) 0,transparent 60%),
     radial-gradient(900px 500px at -10% 110%,var(--glow2) 0,transparent 55%),var(--bg);color:var(--ink);
@@ -109,20 +113,32 @@
   ul.tight{margin:6px 0;padding-left:18px}ul.tight li{margin:5px 0;font-size:12.8px;color:var(--dim)}ul.tight li b{color:var(--ink)}
   .meta{display:inline-block;font-size:11px;color:var(--dim);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin-left:6px}
   .eng{font-size:11.5px;color:var(--eng);border-left:2px solid var(--line);padding-left:9px;margin:6px 0 2px}
-  /* figure — optional inline-SVG metaphor illustration. RULES: inline <svg> only (no <img src>,
-     no external files), every fill/stroke a var(--x) so it follows the theme switcher + print. */
-  figure.figure{margin:14px auto 6px;text-align:center;max-width:420px}
-  figure.figure svg{width:100%;height:auto;shape-rendering:crispEdges;display:block}
-  figure.figure figcaption{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.5}
+  details.eng summary{cursor:pointer;color:var(--eng)}details.eng p{margin:6px 0}
+  /* figure — the picture IS the finding. RULES: inline <svg> only (no <img src>, no external
+     files), every fill/stroke a var(--x) so it follows the theme switcher + print. */
+  figure.figure{margin:14px auto 6px;text-align:center;max-width:640px}
+  figure.figure svg{width:100%;height:auto;display:block;font-family:inherit}
+  figure.figure figcaption{font-size:13.5px;color:var(--ink);margin-top:8px;line-height:1.5}
+  /* animated figures — the BASE style is the FINAL frame. The script adds .armed (start frame,
+     paused) only when motion is allowed, then .play once the figure is in view. No JS, reduced
+     motion and print never arm, so they get the final frame — which must carry the point alone. */
+  .figure .anim{transform-box:fill-box;transform-origin:center}.figure .run,.figure .chop{transform-origin:left center}
+  @keyframes pop{from{opacity:0;transform:scale(.9)}}
+  @keyframes stamp{from{opacity:0;transform:translateY(4px)}}
+  @keyframes run{from{transform:scaleX(.04)}}
+  @keyframes chop{25%,75%{transform:rotate(-24deg)}}
+  .armed .anim{animation-duration:450ms;animation-timing-function:var(--ease-out);animation-fill-mode:backwards;animation-play-state:paused}
+  .armed .pop{animation-name:pop}.armed .stamp{animation-name:stamp}.armed .run{animation-name:run;animation-duration:900ms}.armed .chop{animation-name:chop;animation-duration:600ms;animation-iteration-count:3;animation-timing-function:ease-in-out}
+  .armed.play .anim{animation-play-state:running}
   .chk{list-style:none;padding:0;margin:6px 0}.chk li{font-size:12.8px;color:var(--dim);padding:6px 0 6px 26px;position:relative;border-bottom:1px solid var(--hair)}
   .chk li::before{content:"▢";position:absolute;left:4px;color:var(--coin)}.chk li b{color:var(--ink)}.chk li.d::before{content:"✓";color:var(--good)}
   .ok{color:var(--good);font-weight:700}.no{color:var(--flame);font-weight:700}
   footer{color:var(--dim);font-size:12px;text-align:center;margin-top:28px;border-top:1px solid var(--line);padding-top:16px}
   a{color:var(--neon)}
   @media(max-width:780px){.tiles,.two{grid-template-columns:1fr 1fr}.bar-row{grid-template-columns:130px 1fr 54px}.theme-switch{top:10px;right:10px}}
-  @media (prefers-reduced-motion:reduce){.fill{animation:none}body{transition:none}}
+  @media (prefers-reduced-motion:reduce){.fill,.armed .anim{animation:none}body{transition:none}}
   @media print{
-    .theme-switch{display:none!important}.fill{animation:none}
+    .theme-switch{display:none!important}.fill,.armed .anim{animation:none}
     :root{--bg:#fff;--panel:#fff;--panel2:#f6f2fc;--ink:#1a1228;--bold:#000;--dim:#444;--sub:#333;--line:#ddd;--hair:#eee;
       --chip:#f4eefe;--track:#eee;--scan:transparent;--hero-glow:transparent;--glow1:#fff;--glow2:#fff;--sec1:#fff;--sec2:#fff;
       --coin:#8a6100;--neon:#0c7d70;--flame:#c43317;--good:#0e9f6e;--eng:#555;
@@ -140,118 +156,141 @@
 
   <main class="wrap">
 
-  <!-- SLOT: HERO — name the metaphor in the title; one plain sentence; pills = the win AND the catch. -->
+  <!-- WORD BUDGET (check_html.py enforces it): ≤60 visible words per <section>/hero, ≤350 for the
+       page. Engineer's notes (<details class="eng">), tables, SVG and comments don't count. The
+       honesty box DOES count and is never collapsed — hit the budget by drawing, not by hiding the catch. -->
+
+  <!-- SLOT: HERO — name the metaphor; ONE plain sentence; pills = the win AND the catch. -->
   <header class="hero">
     <span class="tag">Project · Report name · DATE · plain-English report</span>
-    <h1 class="px">🍳 Why the <span class="em">nightly numbers</span> were late</h1>
-    <p class="sub">Every night a job cooks tomorrow's reports before 6am — lately it's been running late.
-      Think of it as a <b>kitchen prepping the next day's meals overnight</b>. We timed the kitchen, found
-      where the hours go, and found a fix. <b>Good news, and one honest catch.</b></p>
+    <h1 class="px">🍳 Why the <span class="em">nightly numbers</span> are late</h1>
+    <p class="sub">Think of the nightly job as a <b>kitchen prepping tomorrow's meals</b>. Lately it
+      finishes after the 6am bell.</p>
     <div class="pills">
-      <span class="pill warn">running <b>4h 10m</b> — misses the 6am bell</span>
-      <span class="pill">most of it is <b>re-doing yesterday's work</b></span>
-      <span class="pill green">a fix could roughly <b>halve it</b></span>
-      <span class="pill">measured on 5 nights · <b>nothing changed yet</b></span>
+      <span class="pill warn"><b>4h 10m</b> — misses the bell</span>
+      <span class="pill">~70% is <b>yesterday's work, again</b></span>
+      <span class="pill green">a fix could <b>roughly halve it</b></span>
+      <span class="pill">5 nights measured · <b>nothing changed yet</b></span>
     </div>
   </header>
 
-  <!-- SLOT: ONE-PARAGRAPH VERSION — the honest TL;DR; a reader could stop here. Include the catch. -->
+  <!-- SLOT: SHORT VERSION — the honest TL;DR in ≤40 words; a reader could stop here. Include the catch. -->
   <section>
-    <h2><span class="num">★</span> The one-paragraph version</h2>
-    <p class="big">The kitchen is slow mostly because <b>it re-chops the same onions every single night</b> —
-      about <b>70%</b> of the time is spent re-doing work whose ingredients didn't change since yesterday.
-      On top of that, a <b>faster oven we already paid for is never actually switched on</b>. If we keep
-      yesterday's chopped onions and flip the oven on, the run should drop to roughly <b>2 hours</b> — back
-      before the bell. The honest catch: we watched 5 normal nights; <b>one rare "big delivery" night</b>
-      (a data spike) we can't yet predict, and the fix helps less on those.</p>
+    <h2><span class="num">★</span> The short version</h2>
+    <p class="big">Most of the night, the kitchen <b>re-chops yesterday's onions</b> (~70%). A fast oven
+      we own is <b>switched off</b>. Fix both and it could finish in <b>~2h</b>. The catch: rare
+      <b>big-delivery nights</b> may still run late.</p>
   </section>
 
-  <!-- SLOT: PROBLEM vs PLAN (optional two-card) — in metaphor terms. Skip if audience already knows. -->
+  <!-- SLOT: FINDING + PICTURE — one section per finding. Draw it ANY way that lands: a scene with
+       characters (like the one below), a cartoon, a cutaway, a comic strip, emoji art, CSS art, a
+       diagram, a chart when a chart is truly clearest (like figure 2). Fixed rules only:
+       the picture shows the finding (not just the setting) and the catch; write the one-sentence
+       point first and make it the aria-label; cover test — hide the caption, can someone still say
+       the finding? Own colours (skin tones, gradients)? Add data-palette="own" to the <figure> and
+       draw on your own background inside it.
+       ANIMATION (optional, class="figure animated"): the BASE style is the final frame; elements
+       with class="anim pop|stamp|run" replay from their start state when scrolled into view. No JS,
+       reduced motion and print all show the final frame, so it must carry the point (and the catch). -->
   <section>
-    <h2><span class="num">1</span> What's going on, in the kitchen</h2>
-    <!-- SLOT: FIGURE (optional) — ONE inline-SVG illustration of the metaphor, honest news included.
-         Pixel-art style: <rect>s on a 7px grid, every fill a var(--x) so it themes. If you can't
-         draw the bad news into it, cut the figure — never let the art oversell. Delete this whole
-         <figure> if you're not illustrating. -->
-    <figure class="figure" role="img"
-      aria-label="Pixel scene: a chef re-chops yesterday's onions at the counter while the big oven beside them sits dark, switched off.">
-      <svg viewBox="0 0 168 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- night -->
-        <rect x="154" y="0" width="10" height="10" rx="3" fill="var(--moon)" opacity=".85"/>
-        <!-- chef: hat / face / body / legs -->
-        <rect x="21" y="0" width="14" height="7" fill="var(--ink)"/>
-        <rect x="14" y="7" width="28" height="7" fill="var(--ink)"/>
-        <rect x="21" y="14" width="14" height="14" fill="var(--coin)"/>
-        <rect x="28" y="17" width="4" height="4" fill="var(--bg)"/>
-        <rect x="14" y="28" width="28" height="21" fill="var(--neon)"/>
-        <rect x="42" y="28" width="7" height="7" fill="var(--coin)"/>
-        <rect x="49" y="25" width="4" height="10" fill="var(--dim)"/>
-        <rect x="21" y="49" width="6" height="7" fill="var(--violet)"/>
-        <rect x="32" y="49" width="6" height="7" fill="var(--violet)"/>
-        <!-- counter + the same onions as yesterday -->
-        <rect x="49" y="42" width="42" height="14" fill="var(--panel2)"/>
-        <rect x="49" y="42" width="42" height="2" fill="var(--line)"/>
-        <rect x="56" y="35" width="7" height="7" rx="3" fill="var(--violet)"/>
-        <rect x="66" y="38" width="3" height="3" fill="var(--violet)"/>
-        <rect x="72" y="35" width="7" height="7" rx="3" fill="var(--violet)"/>
-        <!-- the big oven — dark window, power light grey: it is OFF (the honest part of the picture) -->
-        <rect x="98" y="14" width="56" height="42" fill="var(--panel2)" stroke="var(--line)" stroke-width="2"/>
-        <rect x="105" y="28" width="42" height="21" fill="var(--track)"/>
-        <text x="126" y="42" text-anchor="middle" font-size="8" fill="var(--dim)" font-family="inherit">OFF</text>
-        <rect x="145" y="19" width="5" height="5" rx="2" fill="var(--dim)"/>
-        <!-- floor -->
-        <rect x="0" y="56" width="168" height="2" fill="var(--line)"/>
+    <h2><span class="num">1</span> Where the night goes</h2>
+    <figure class="figure animated" role="img"
+      aria-label="A tired chef chops seven of yesterday's onions again while only two new onions wait; the big fast oven behind is unplugged.">
+      <svg viewBox="0 0 360 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g stroke="var(--ink)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+          <!-- the chef: tired face, sweat drop -->
+          <rect x="30" y="72" width="50" height="45" rx="14" fill="var(--neon)"/>
+          <circle cx="55" cy="56" r="15" fill="var(--warn)"/>
+          <circle cx="45" cy="31" r="9" fill="var(--panel)"/><circle cx="55" cy="27" r="10" fill="var(--panel)"/><circle cx="65" cy="31" r="9" fill="var(--panel)"/>
+          <rect x="43" y="33" width="24" height="9" rx="2" fill="var(--panel)"/>
+          <path d="M48 53h5M58 53h5M50 63q5 -4 10 0" fill="none"/>
+          <path d="M73 44q4 6 0 9q-4 -3 0 -9z" fill="var(--moon)" stroke-width="1.5"/>
+          <!-- counter + board -->
+          <rect x="10" y="105" width="215" height="45" rx="4" fill="var(--panel2)" stroke="var(--line)"/>
+          <rect x="95" y="98" width="100" height="7" rx="3" fill="var(--coin)"/>
+          <!-- 7 of yesterday's onions (≈70%) on the board · 2 new ones (≈22%) waiting at the end -->
+          <g fill="var(--violet)" stroke-width="1.5">
+            <circle class="anim pop" style="animation-delay:0ms"   cx="106" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:50ms"  cx="119" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:100ms" cx="132" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:150ms" cx="145" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:200ms" cx="158" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:250ms" cx="171" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:300ms" cx="184" cy="91" r="6"/>
+          </g>
+          <g fill="var(--good)" stroke-width="1.5">
+            <circle class="anim pop" style="animation-delay:350ms" cx="203" cy="98" r="6"/>
+            <circle class="anim pop" style="animation-delay:400ms" cx="216" cy="98" r="6"/>
+          </g>
+          <!-- arm + knife: chops three times, rests on the board -->
+          <g class="anim chop">
+            <path d="M76 84L102 92" stroke="var(--neon)" stroke-width="9"/>
+            <path d="M102 86l26 5l-2 6l-25 -3z" fill="var(--dim)"/>
+          </g>
+          <!-- the oven we own — door dark, plug lying on the floor short of the socket -->
+          <rect x="250" y="55" width="90" height="95" rx="6" fill="var(--panel2)"/>
+          <rect x="262" y="84" width="66" height="46" rx="4" fill="var(--track)" stroke="var(--line)"/>
+          <circle cx="270" cy="69" r="4" fill="var(--panel)"/><circle cx="284" cy="69" r="4" fill="var(--panel)"/>
+          <path d="M340 138q8 12 -6 13l-14 -2" fill="none" stroke="var(--dim)"/>
+          <rect x="310" y="145" width="11" height="7" rx="2" fill="var(--dim)" stroke="none"/>
+          <rect x="346" y="96" width="11" height="15" rx="2" fill="var(--panel)"/>
+        </g>
+        <rect x="0" y="152" width="360" height="2" fill="var(--line)"/>
+        <g font-size="10" text-anchor="middle" font-weight="700">
+          <text class="anim stamp" style="animation-delay:650ms" x="145" y="76" fill="var(--flame)">↻ yesterday's, again</text>
+          <text x="145" y="122" fill="var(--ink)">7 again</text>
+          <text x="209" y="122" fill="var(--good)">2 new</text>
+          <text x="295" y="111" fill="var(--dim)">OFF</text>
+          <text x="315" y="166" fill="var(--flame)">unplugged</text>
+        </g>
       </svg>
-      <figcaption>The kitchen tonight, honestly drawn: re-chopping yesterday's onions (the ~70%)
-        while the big oven we already paid for sits switched <b>off</b>. The picture carries the
-        bad news too — that's the rule.</figcaption>
+      <figcaption><b>~70%</b> of the night is yesterday's onions, chopped again — and the fast oven is unplugged.</figcaption>
     </figure>
-    <div class="two">
-      <div class="callout"><h3>🔪 Today — re-chopping everything</h3>
-        <p>Each night the kitchen starts from scratch: re-chops, re-measures, re-cooks <i>everything</i> —
-          even the parts that are identical to last night. It's thorough, but most of the effort is
-          repeating itself.</p></div>
-      <div class="callout good"><h3>🧊 The idea — keep what didn't change</h3>
-        <p>Chop the onions once, keep them in the fridge, and only re-chop what's actually new. Plus turn on
-          the oven we already have. Same meals, far less time.</p></div>
-    </div>
-    <p class="eng">Engineer's note: "re-chopping" = recomputing partitions whose source rows are unchanged
-      (no incremental/caching layer); "the oven we paid for" = a parallelism setting present in config but
-      not enabled in the prod runner. See <code>flag-gated-feature-dark-in-prod</code>.</p>
+    <details class="eng"><summary>Engineer's note</summary>
+      <p>"Done again" = recomputing partitions whose source rows are unchanged (no incremental layer).
+        Stage split over 5 nights: ~70% recompute · ~22% new · ~8% waiting — drawn as 7/2/1 of 10.
+        "The oven" = a parallelism setting present in config but not enabled in the prod runner.</p>
+    </details>
   </section>
 
-  <!-- SLOT: FINDINGS — one section per finding. Pair the plain claim with its NUMBER (bar/tile). -->
+  <!-- SLOT: WHAT A FIX BUYS — here a plain chart IS the clearest picture (two lengths against the
+       line that matters), so it's a chart. Pick that only when it's true. An ESTIMATE is drawn as
+       one (dashed, labelled) — never as solid as a measurement. -->
   <section>
-    <h2><span class="num">2</span> Where the hours actually go</h2>
-    <p class="lead">We timed each stage across 5 nights. Here's the split.</p>
-    <div class="bar-row" role="img" aria-label="re-doing unchanged work: about 70%"><div class="lab">re-doing unchanged work</div><div class="track"><div class="fill bad" style="width:70%"></div></div><div class="amt">~70%</div></div>
-    <div class="bar-row" role="img" aria-label="genuinely new work: about 22%"><div class="lab">genuinely new work</div><div class="track"><div class="fill good" style="width:22%"></div></div><div class="amt">~22%</div></div>
-    <div class="bar-row" role="img" aria-label="waiting and overhead: about 8%"><div class="lab">waiting / overhead</div><div class="track"><div class="fill mid" style="width:8%"></div></div><div class="amt">~8%</div></div>
-    <p style="font-size:12.5px;color:var(--dim)">Two-thirds of the night is the kitchen repeating itself —
-      which is exactly the part the "keep the onions" fix removes.</p>
-    <div class="callout aha"><h3><span class="i">💡</span>The surprise — the fast oven was never on</h3>
-      <p>The recipe says "use the big oven" (it'd cook 3 trays at once), but in the actual kitchen that oven
-        was <b>switched off</b> the whole time. Free speed we'd already bought, sitting unused.</p></div>
-  </section>
-
-  <!-- SLOT: WHAT CHANGES / WHAT WE CAN SKIP — concrete outcomes in plain terms (tiles work well). -->
-  <section>
-    <h2><span class="num">3</span> What a fix buys us</h2>
+    <h2><span class="num">2</span> What a fix could buy</h2>
+    <figure class="figure animated" role="img"
+      aria-label="Tonight's run, 4 hours 10 minutes, ends past the 6am bell. With the fix, an estimated 2 hours, ends before it.">
+      <svg viewBox="0 0 300 92" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g font-size="10" fill="var(--ink)">
+          <text x="0" y="31">tonight</text>
+          <text x="0" y="67">with fix</text>
+        </g>
+        <rect class="anim run" x="60" y="20" width="190" height="16" rx="3" fill="var(--flame)"/>
+        <rect class="anim run" style="animation-delay:200ms" x="60" y="56" width="91" height="16" rx="3"
+          fill="var(--neon)" fill-opacity=".35" stroke="var(--neon)" stroke-dasharray="4 3"/>
+        <g font-size="10" font-weight="700">
+          <text x="254" y="32" fill="var(--flame)">4h 10m</text>
+          <text x="155" y="68" fill="var(--neon)">~2h (est.)</text>
+        </g>
+        <!-- the line that matters -->
+        <rect x="228" y="10" width="2" height="72" fill="var(--coin)"/>
+        <text x="229" y="90" font-size="10" text-anchor="middle" fill="var(--coin)">6am bell</text>
+      </svg>
+      <figcaption>Estimate from 5 normal nights — <b>not a promise</b>.</figcaption>
+    </figure>
     <div class="tiles">
-      <div class="tile t-good"><div class="k">Likely new runtime</div><div class="v">~2h</div><div class="note">from 4h 10m — back before 6am</div></div>
-      <div class="tile t-coin"><div class="k">Effort to do it</div><div class="v">~1 day</div><div class="note">caching layer + flip the setting</div></div>
-      <div class="tile t-violet"><div class="k">Risk</div><div class="v">low</div><div class="note">same outputs, reversible</div></div>
+      <div class="tile t-coin"><div class="k">Effort</div><div class="v">~1 day</div></div>
+      <div class="tile t-violet"><div class="k">Risk</div><div class="v">low</div><div class="note">reversible</div></div>
     </div>
   </section>
 
-  <!-- SLOT: HONESTY BOX — limits foregrounded, not a footnote. Floor-not-ceiling, small sample, unknowns. -->
+  <!-- SLOT: HONESTY BOX — limits foregrounded, never collapsed, counted in the word budget. -->
   <section>
-    <h2><span class="num">⚖︎</span> Being straight with you (the limits)</h2>
+    <h2><span class="num">⚖︎</span> The limits</h2>
     <ul class="tight">
-      <li><b>We watched 5 normal nights.</b> The "~2h" is an estimate from those — a typical night, not a guarantee.</li>
-      <li><b>Big-delivery nights are different.</b> When a flood of new data arrives, more of it is genuinely
-        new work, so the "keep the onions" trick helps less. We can't yet predict those nights.</li>
-      <li><b>Nothing is changed yet</b> — this is a measurement + a plan, fully reversible if we proceed.</li>
+      <li><b>5 normal nights.</b> "~2h" is a typical night, not a guarantee.</li>
+      <li><b>Big-delivery nights</b> bring more genuinely new work, so the fix helps less. We can't predict them yet.</li>
+      <li><b>Nothing changed yet.</b> Fully reversible.</li>
     </ul>
   </section>
 
@@ -259,10 +298,10 @@
   <section>
     <h2><span class="num">→</span> What's next</h2>
     <ul class="chk">
-      <li class="d"><b>Done — timed the kitchen</b> across 5 nights and found where the hours go.</li>
-      <li><b>Turn the oven on</b> (enable the parallel setting in prod) — the free, low-risk win first.</li>
-      <li><b>Keep the onions</b> (add the caching layer so unchanged work isn't redone).</li>
-      <li><b>Re-time it</b> on a few nights and confirm it's back before the 6am bell.</li>
+      <li class="d"><b>Timed the kitchen</b> (5 nights)</li>
+      <li><b>Turn the oven on</b> — the free win first</li>
+      <li><b>Keep the onions</b> — skip unchanged work</li>
+      <li><b>Re-time it</b> against the 6am bell</li>
     </ul>
   </section>
 
@@ -276,7 +315,7 @@
     </table>
   </section>
 
-  <footer>🍳 Plain-English report · DATE · every figure traced to the timings · nothing changed yet, fully reversible 🔥🪙🌙⚡🎮</footer>
+  <footer>🍳 Plain-English report · DATE · every figure traced to the timings</footer>
   </main>
 
   <!-- tiny theme switcher: sets data-theme on <html>, remembers the choice. First visit follows
@@ -296,5 +335,15 @@
     set(saved||(prefLight?"paper":"arcade"), false);
     btns.forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.set, true); }); });
   })();
+  // figures: replay the drawing once when it scrolls into view (skipped under reduced motion)
+  (function(){
+    try{ if(matchMedia("(prefers-reduced-motion: reduce)").matches||!("IntersectionObserver" in window)) return; }catch(e){ return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add("play"); io.unobserve(e.target); } }); },{threshold:.4});
+    document.querySelectorAll("figure.figure.animated").forEach(function(f){ f.classList.add("armed"); io.observe(f); });
+  })();
+  // closed <details> don't print — open the engineer's notes for paper
+  window.addEventListener("beforeprint", function(){
+    document.querySelectorAll("details.eng").forEach(function(d){ d.open=true; }); });
   </script>
 </body></html>
