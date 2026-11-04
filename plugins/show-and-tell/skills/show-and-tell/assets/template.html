@@ -116,18 +116,19 @@
   details.eng summary{cursor:pointer;color:var(--eng)}details.eng p{margin:6px 0}
   /* figure — the picture IS the finding. RULES: inline <svg> only (no <img src>, no external
      files), every fill/stroke a var(--x) so it follows the theme switcher + print. */
-  figure.figure{margin:14px auto 6px;text-align:center;max-width:460px}
+  figure.figure{margin:14px auto 6px;text-align:center;max-width:640px}
   figure.figure svg{width:100%;height:auto;display:block;font-family:inherit}
   figure.figure figcaption{font-size:13.5px;color:var(--ink);margin-top:8px;line-height:1.5}
   /* animated figures — the BASE style is the FINAL frame. The script adds .armed (start frame,
      paused) only when motion is allowed, then .play once the figure is in view. No JS, reduced
      motion and print never arm, so they get the final frame — which must carry the point alone. */
-  .figure .anim{transform-box:fill-box;transform-origin:center}.figure .run{transform-origin:left center}
+  .figure .anim{transform-box:fill-box;transform-origin:center}.figure .run,.figure .chop{transform-origin:left center}
   @keyframes pop{from{opacity:0;transform:scale(.9)}}
   @keyframes stamp{from{opacity:0;transform:translateY(4px)}}
   @keyframes run{from{transform:scaleX(.04)}}
+  @keyframes chop{25%,75%{transform:rotate(-24deg)}}
   .armed .anim{animation-duration:450ms;animation-timing-function:var(--ease-out);animation-fill-mode:backwards;animation-play-state:paused}
-  .armed .pop{animation-name:pop}.armed .stamp{animation-name:stamp}.armed .run{animation-name:run;animation-duration:900ms}
+  .armed .pop{animation-name:pop}.armed .stamp{animation-name:stamp}.armed .run{animation-name:run;animation-duration:900ms}.armed .chop{animation-name:chop;animation-duration:600ms;animation-iteration-count:3;animation-timing-function:ease-in-out}
   .armed.play .anim{animation-play-state:running}
   .chk{list-style:none;padding:0;margin:6px 0}.chk li{font-size:12.8px;color:var(--dim);padding:6px 0 6px 26px;position:relative;border-bottom:1px solid var(--hair)}
   .chk li::before{content:"▢";position:absolute;left:4px;color:var(--coin)}.chk li b{color:var(--ink)}.chk li.d::before{content:"✓";color:var(--good)}
@@ -182,8 +183,8 @@
   </section>
 
   <!-- SLOT: FINDING + PICTURE — one section per finding. Draw it ANY way that lands: a scene with
-       characters, a cartoon, a cutaway, a comic strip, emoji art, CSS art, canvas, a diagram. The
-       two pictures below are deliberately simple — one style, not the house style. Fixed rules only:
+       characters (like the one below), a cartoon, a cutaway, a comic strip, emoji art, CSS art, a
+       diagram, a chart when a chart is truly clearest (like figure 2). Fixed rules only:
        the picture shows the finding (not just the setting) and the catch; write the one-sentence
        point first and make it the aria-label; cover test — hide the caption, can someone still say
        the finding? Own colours (skin tones, gradients)? Add data-palette="own" to the <figure> and
@@ -194,45 +195,57 @@
   <section>
     <h2><span class="num">1</span> Where the night goes</h2>
     <figure class="figure animated" role="img"
-      aria-label="Ten trays stand for one night's work: about seven are yesterday's work done again, two are new, one is waiting.">
-      <svg viewBox="0 0 300 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- 7 trays: yesterday's work, re-done (flame) — each gets a ↻ "again" stamp -->
-        <g fill="var(--flame)">
-          <rect class="anim pop" style="animation-delay:0ms"   x="4"   y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:50ms"  x="33"  y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:100ms" x="62"  y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:150ms" x="91"  y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:200ms" x="120" y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:250ms" x="149" y="34" width="24" height="18" rx="3"/>
-          <rect class="anim pop" style="animation-delay:300ms" x="178" y="34" width="24" height="18" rx="3"/>
+      aria-label="A tired chef chops seven of yesterday's onions again while only two new onions wait; the big fast oven behind is unplugged.">
+      <svg viewBox="0 0 360 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g stroke="var(--ink)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+          <!-- the chef: tired face, sweat drop -->
+          <rect x="30" y="72" width="50" height="45" rx="14" fill="var(--neon)"/>
+          <circle cx="55" cy="56" r="15" fill="var(--warn)"/>
+          <circle cx="45" cy="31" r="9" fill="var(--panel)"/><circle cx="55" cy="27" r="10" fill="var(--panel)"/><circle cx="65" cy="31" r="9" fill="var(--panel)"/>
+          <rect x="43" y="33" width="24" height="9" rx="2" fill="var(--panel)"/>
+          <path d="M48 53h5M58 53h5M50 63q5 -4 10 0" fill="none"/>
+          <path d="M73 44q4 6 0 9q-4 -3 0 -9z" fill="var(--moon)" stroke-width="1.5"/>
+          <!-- counter + board -->
+          <rect x="10" y="105" width="215" height="45" rx="4" fill="var(--panel2)" stroke="var(--line)"/>
+          <rect x="95" y="98" width="100" height="7" rx="3" fill="var(--coin)"/>
+          <!-- 7 of yesterday's onions (≈70%) on the board · 2 new ones (≈22%) waiting at the end -->
+          <g fill="var(--violet)" stroke-width="1.5">
+            <circle class="anim pop" style="animation-delay:0ms"   cx="106" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:50ms"  cx="119" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:100ms" cx="132" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:150ms" cx="145" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:200ms" cx="158" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:250ms" cx="171" cy="91" r="6"/>
+            <circle class="anim pop" style="animation-delay:300ms" cx="184" cy="91" r="6"/>
+          </g>
+          <g fill="var(--good)" stroke-width="1.5">
+            <circle class="anim pop" style="animation-delay:350ms" cx="203" cy="98" r="6"/>
+            <circle class="anim pop" style="animation-delay:400ms" cx="216" cy="98" r="6"/>
+          </g>
+          <!-- arm + knife: chops three times, rests on the board -->
+          <g class="anim chop">
+            <path d="M76 84L102 92" stroke="var(--neon)" stroke-width="9"/>
+            <path d="M102 86l26 5l-2 6l-25 -3z" fill="var(--dim)"/>
+          </g>
+          <!-- the oven we own — door dark, plug lying on the floor short of the socket -->
+          <rect x="250" y="55" width="90" height="95" rx="6" fill="var(--panel2)"/>
+          <rect x="262" y="84" width="66" height="46" rx="4" fill="var(--track)" stroke="var(--line)"/>
+          <circle cx="270" cy="69" r="4" fill="var(--panel)"/><circle cx="284" cy="69" r="4" fill="var(--panel)"/>
+          <path d="M340 138q8 12 -6 13l-14 -2" fill="none" stroke="var(--dim)"/>
+          <rect x="310" y="145" width="11" height="7" rx="2" fill="var(--dim)" stroke="none"/>
+          <rect x="346" y="96" width="11" height="15" rx="2" fill="var(--panel)"/>
         </g>
-        <g fill="var(--flame)" font-size="13" text-anchor="middle">
-          <text class="anim stamp" style="animation-delay:700ms" x="16"  y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:750ms" x="45"  y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:800ms" x="74"  y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:850ms" x="103" y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:900ms" x="132" y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:950ms" x="161" y="26">↻</text>
-          <text class="anim stamp" style="animation-delay:1000ms" x="190" y="26">↻</text>
-        </g>
-        <!-- 2 trays genuinely new (good) · 1 tray waiting (track) -->
-        <rect class="anim pop" style="animation-delay:350ms" x="211" y="34" width="24" height="18" rx="3" fill="var(--good)"/>
-        <rect class="anim pop" style="animation-delay:400ms" x="240" y="34" width="24" height="18" rx="3" fill="var(--good)"/>
-        <rect class="anim pop" style="animation-delay:450ms" x="272" y="34" width="24" height="18" rx="3" fill="var(--track)" stroke="var(--dim)"/>
-        <!-- group labels: ≤3 words each -->
-        <rect x="4" y="60" width="198" height="2" fill="var(--flame)"/>
-        <rect x="211" y="60" width="53" height="2" fill="var(--good)"/>
-        <rect x="272" y="60" width="24" height="2" fill="var(--dim)"/>
-        <g font-size="10" text-anchor="middle" fill="var(--ink)">
-          <text x="103" y="78">7 · done again</text>
-          <text x="237" y="78">new</text>
-          <text x="284" y="78">wait</text>
+        <rect x="0" y="152" width="360" height="2" fill="var(--line)"/>
+        <g font-size="10" text-anchor="middle" font-weight="700">
+          <text class="anim stamp" style="animation-delay:650ms" x="145" y="76" fill="var(--flame)">↻ yesterday's, again</text>
+          <text x="145" y="122" fill="var(--ink)">7 again</text>
+          <text x="209" y="122" fill="var(--good)">2 new</text>
+          <text x="295" y="111" fill="var(--dim)">OFF</text>
+          <text x="315" y="166" fill="var(--flame)">unplugged</text>
         </g>
       </svg>
-      <figcaption><b>7 of every 10 trays</b> are yesterday's work, done again.</figcaption>
+      <figcaption><b>~70%</b> of the night is yesterday's onions, chopped again — and the fast oven is unplugged.</figcaption>
     </figure>
-    <div class="callout aha"><h3><span class="i">💡</span>The fast oven was never on</h3>
-      <p>The recipe says use it. The real kitchen has it off.</p></div>
     <details class="eng"><summary>Engineer's note</summary>
       <p>"Done again" = recomputing partitions whose source rows are unchanged (no incremental layer).
         Stage split over 5 nights: ~70% recompute · ~22% new · ~8% waiting — drawn as 7/2/1 of 10.
@@ -240,7 +253,8 @@
     </details>
   </section>
 
-  <!-- SLOT: WHAT A FIX BUYS — before/after against the line that matters. An ESTIMATE is drawn as
+  <!-- SLOT: WHAT A FIX BUYS — here a plain chart IS the clearest picture (two lengths against the
+       line that matters), so it's a chart. Pick that only when it's true. An ESTIMATE is drawn as
        one (dashed, labelled) — never as solid as a measurement. -->
   <section>
     <h2><span class="num">2</span> What a fix could buy</h2>

@@ -96,7 +96,7 @@ The reader looks before they read, and most stop reading early. Borrowed from th
 — *big pictures, few words*. Like eli5, **the drawing method is yours to choose.** Draw whatever makes
 this finding land: a scene with characters, a cartoon, a cutaway, a map, a comic strip, a machine
 with its parts labelled, a before/after pair, a crowd of little people, emoji arranged into a picture,
-CSS art, a canvas sketch, a chart if a chart is truly clearest. Pictures are big — give a strong one
+CSS art, a chart if a chart is truly clearest. Pictures are big — give a strong one
 the full width. Don't default to a bar chart or a row of boxes because they are easy; that is the
 spreadsheet coming back in through the side door.
 
@@ -115,8 +115,9 @@ Only these rules are fixed, because each one protects the reader:
   length), it must match the source, and the caption states the real figure.
 - **The `aria-label` is the one-sentence finding**, so a screen reader — and the fact-verifier — get the
   claim, not a description of a scene.
-- **Self-contained.** The page must open from `file://` with no network: inline SVG, CSS, canvas, emoji,
-  or `data:` images are all fine; nothing fetched at render time.
+- **Self-contained, and complete without JS.** The page must open from `file://` with no network:
+  inline SVG, CSS, emoji, or `data:` images are all fine; nothing fetched at render time. Avoid
+  `<canvas>` — it is blank without JS and the fact-verifier can't read it.
 - **Readable in every theme.** Use the theme `var(--x)` colours and the drawing follows the 🎮/📄/🌌
   toggle by itself. If the picture needs its own palette (skin tones, a sunset, a gradient), give the
   figure `data-palette="own"` and draw it on its own background inside the figure so its contrast never
@@ -312,10 +313,9 @@ The skill was extracted from a report that explained a retrieval-system investig
 librarian" metaphor — recall shown as "finds it ~51%," precision as "interrupts on ~99.6%," with
 engineer's notes, an honesty box, and a correction of an earlier false claim. The template carries a
 *different* worked example (a slow nightly job, as a "kitchen") so you can see the recipe generalize:
-223 visible words, two pictures (seven of ten trays "done again"; tonight's run vs the estimate
-against the 6am bell), both animated, both readable as a still. Those two are deliberately simple
-so the mechanics are easy to read — they are one style, not the house style. Draw yours however
-the finding is clearest.
+two pictures, both animated, both readable as a still: a scene (a tired chef re-chopping seven of
+yesterday's onions while the oven sits unplugged) and, because there a chart really is clearest,
+tonight's run vs the estimate against the 6am bell. Draw yours however the finding lands best.
 Read `assets/template.html` top to bottom once before your first build — the inline comments mark each
 slot and the intent behind it.
 
