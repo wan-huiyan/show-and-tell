@@ -59,7 +59,7 @@ return UNVERIFIABLE, which is a true answer but a useless one. >>>
 
    Do this as an explicit sweep, not as a feeling: **list every material fact in the source that the report omits, and say for each whether the omission makes the report more alarming or less.** If every entry on that list points the same way, you have only looked one way.
 6. **Fabrication.** Any claim or number in the report with NO basis in the source → FABRICATED.
-7. **Figure / illustration drift.** An illustration is a claim in pixels. Check each figure's caption
+7. **Figure / illustration drift.** An illustration is a claim in a picture. Check each figure's caption
    and aria-label the same way as prose: does the scene imply something the source doesn't support
    (a "fixed!" picture for a "could improve" finding; a triumphant image with the catch missing)?
    The skill's rule is that the picture must carry the bad news too — flag a figure that only shows

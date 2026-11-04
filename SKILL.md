@@ -223,7 +223,8 @@ spending: their attention.
    top-right 🎮/📄/🌌 toggle. First visit follows the reader's OS light/dark preference (light-mode
    readers get paper); an explicit click is remembered; print forces a clean light theme. Edit
    content, not CSS — and never hardcode
-   a colour; every colour is a `--var` so all three themes stay correct.
+   a colour outside a `data-palette="own"` figure; every other colour is a `--var` so all three
+   themes stay correct.
 5. **Write plain, and little.** Short sentences. Second person. Name a thing once in metaphor, then
    reuse it. Stay inside the word budget; jargon and method go in a collapsed engineer's note.
 6. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
@@ -288,8 +289,10 @@ actually defined — the #1 cause of "I opened it and half the text is invisible
 undefined CSS variable (see `css-var-undefined-silent-declaration-drop`); every theme block
 (paper/midnight) overrides the full token set, so switching themes can't leak wrong-contrast colours;
 the page stays **self-contained** (no render-time `http(s)` fetches — plain `<a>` links are fine);
-figures have text alternatives (`alt`/`aria-label`) and no hardcoded hex colours that would ignore the
-theme switcher; and no `__PLACEHOLDER__` slot was left unfilled. For a true visual check, `open`/
+figures have text alternatives (`alt`/`aria-label` — present, not whether it states the finding) and
+no hardcoded hex colours that would ignore the theme switcher (outside `data-palette="own"` figures);
+`@keyframes` come with a reduced-motion rule; the word budget holds; and no `__PLACEHOLDER__` slot was
+left unfilled. For a true visual check, `open`/
 `xdg-open`/`start` the file, or serve the directory on a port and use `browser_evaluate` (file:// is
 blocked in the MCP browser) — but the static check covers the silent-failure cases.
 

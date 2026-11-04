@@ -127,7 +127,7 @@ The "Without" column isn't a strawman — a markdown summary is a perfectly reas
 | 5. **Write plain** | Short sentences, second person. Name a thing once in metaphor, then reuse it. Jargon → cut it or move it to an engineer's note. |
 | 6. **Pair every claim with evidence** | A labelled bar or a stat tile. Never invent a number to fill a tile. |
 | 7. **Draw each finding** | One picture per finding, drawn any way that lands — a scene, a cartoon, a comic strip, a diagram — as long as it shows the finding itself and the catch, and opens offline. Animated only when the finding is a change; the still frame carries the point for print and reduced motion. |
-| 8. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours. Catches the silent invisible-text bug. Structure only: for anything interactive, or the page's width on a phone, load it in a browser. |
+| 8. **Verify the render** | `python3 scripts/check_html.py your-report.html` — balanced tags, every `var(--x)` defined, theme parity, self-contained, figures labelled, no hardcoded colours, reduced-motion rule present, word budget. Catches the silent invisible-text bug. Structure only: for anything interactive, or the page's width on a phone, load it in a browser. |
 | 9. **Open it** | `open` (macOS) / `xdg-open` (Linux) / `start` (Windows) `your-report.html` so the user sees it immediately. |
 
 ---
@@ -176,8 +176,8 @@ Honesty box for the skill itself (of course it has one):
 - Engineer's notes where the plain version loses something a technical reader wants.
 - If it corrects an earlier claim (even your own), it says so plainly.
 - No invented numbers to fill a tile.
-- If there's an illustration: inline SVG only, theme-var colours, the bad news drawn in, and an `aria-label` so it's not invisible to screen readers.
-- Passes `check_html.py`: balanced tags, every CSS var defined, theme parity across 🎮/📄/🌌, self-contained (no render-time network), figures labelled, no hardcoded colours, no leftover `__PLACEHOLDER__`. (Structure only — it does not parse attribute values or run the page.)
+- A picture per finding: drawn any way that lands, self-contained (inline SVG, CSS, emoji or `data:` images), theme colours or `data-palette="own"`, the bad news drawn in, and an `aria-label` that states the finding.
+- Passes `check_html.py`: balanced tags, every CSS var defined, theme parity across 🎮/📄/🌌, self-contained (no render-time network), figures labelled, no hardcoded colours, reduced-motion rule present, word budget, no leftover `__PLACEHOLDER__`. (Structure only — it does not parse attribute values or run the page.)
 - The fact-verifier ran and its **omission list has entries pointing both ways**, or you know why it doesn't; every "done"/"merged"/"cleared out" was checked against real state, not against a document describing the work.
 
 </details>
