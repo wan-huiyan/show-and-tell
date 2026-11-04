@@ -4,8 +4,9 @@ description: >
   Turn dense technical findings, an analysis, a code/research session outcome, or a jargon-heavy
   document into a genuinely PLAIN-ENGLISH self-contained HTML explainer a non-technical or busy
   stakeholder can actually understand AND trust — built on a single everyday metaphor carried through
-  the whole piece (the bad news included), with the REAL numbers shown honestly beside each plain
-  claim, an "engineer's note" layer so technical readers aren't shortchanged, a foregrounded
+  the whole piece (the bad news included), picture-first with a hard word budget (every finding drawn
+  as the claim itself, animated only when the point is a change), with the REAL numbers shown honestly
+  beside each plain claim, an "engineer's note" layer so technical readers aren't shortchanged, a foregrounded
   honesty/limits box, and a bundled FACT-VERIFIER that checks every claim, number, and metaphor back
   against the source document to catch translation drift before anyone reads it (self-contained, opens
   straight from file:// — no build, no server; arcade/pixel aesthetic). Use this WHENEVER the
@@ -16,8 +17,8 @@ description: >
   friendly visual explainer. Prefer this over a plain markdown summary when the audience is non-expert
   or the user says "pretty," "plain English," "for my boss," "easy to understand," or "report."
 author: Claude Code
-version: 2.4.0
-date: 2026-09-09
+version: 2.5.0
+date: 2026-11-04
 ---
 
 # show-and-tell — plain-English explainer reports 🎪
@@ -74,8 +75,8 @@ separates it from marketing.
   right answer about half the time" *and* show the `~51%` bar. The plain words carry the meaning; the
   number carries the credibility. A claim with no number reads as spin; a number with no plain words
   reads as a spreadsheet. Pair them. (Component: a labelled bar or a stat tile.)
-- **Lead with a one-paragraph version** that a reader could stop after and still have the honest gist —
-  including the catch, not just the win.
+- **Lead with a short version** (≤40 words) that a reader could stop after and still have the honest
+  gist — including the catch, not just the win.
 - **Give limits their own box, foregrounded** (not a footnote). "Here's what we're NOT sure of" builds
   more trust than any positive claim. Name the floor-not-ceiling caveats, the small sample, the
   unmeasured bits.
@@ -90,43 +91,69 @@ real mechanism, the metric name, the exact method. The non-expert's eye skips th
 engineer drops in. This is how you serve both audiences in one document instead of writing two. Use it
 where the plain version genuinely loses something a technical reader would want — not on every section.
 
-## Illustrate the metaphor (optional, high-leverage)
-One small picture of the metaphor makes it land faster than any paragraph — a pixel librarian at
-her filing cabinet, a pixel kitchen with the oven off. The template ships a `figure.figure`
-component (inline SVG + caption) and a worked example. Rules, in priority order:
+## Pictures first, few words — the eli5 rule
+The reader looks before they read, and most stop reading early. Borrowed from the `eli5` skill's brief
+— *big pictures, few words* — and enforced:
 
-- **Inline SVG only.** No `<img src>`, no external files, no fonts, no JS — the page must keep
-  opening from `file://` offline. (`check_html.py` enforces this.)
-- **Every fill/stroke is a `var(--x)`.** A hardcoded hex looks right in arcade and wrong in paper/
-  midnight/print. Use the theme tokens (`--neon`, `--coin`, `--violet`, `--ink`, `--panel2`,
-  `--track`, `--dim`…) and the art recolours itself when the reader flips the 🎮/📄/🌌 toggle.
-- **The picture must carry the bad news too** — same test as the metaphor itself. The template's
-  kitchen scene shows the oven *switched off*, not a triumphant chef. If you can't draw the catch
-  into it, cut the figure; never let the art oversell what the numbers say.
-- **Accessible or invisible:** the `<figure>` gets `role="img"` + an `aria-label` that states what
-  the scene shows (the inner `<svg>` is `aria-hidden`); purely decorative flourishes are
-  `aria-hidden="true"`.
-- **Style: pixel-art fits the arcade theme.** Draw with `<rect>`s on a 7px grid
-  (`shape-rendering:crispEdges` is set for you). If the **pixel-art skill**
-  (github.com/wan-huiyan/pixel-art) is installed, follow its character/scene conventions — it's the
-  same aesthetic; just swap its literal colours for theme vars. A hand-drawn/sketchy look also
-  works: 2–3 slightly-jittered overlapping `<path>` strokes, still `var(--x)`-coloured.
-- **One hero figure, maybe one spot figure.** This is seasoning, not the meal — text-first, and a
-  report with no figure at all is completely fine. Never block a report on art.
-- **Fact-check the figure like a claim.** A picture can drift exactly like prose (implying "fixed"
-  when the source says "could improve"). The fact-verifier checks captions and aria-labels too —
-  feed them in with the report text.
+- **Every finding gets a picture, and the picture IS the finding**, not the metaphor's scenery. A chef
+  standing in a kitchen shows the setting; ten trays with seven stamped "done again" shows the claim.
+  Write the finding as one sentence first, then draw that sentence as a **count** (7 of 10), a
+  **comparison** (two bars against the line that matters), or a **cause** (one switch wired to every
+  lamp, switched off).
+- **Cover test.** Hide the caption. Can someone say the finding from the picture alone? If not, redraw
+  — don't add words.
+- **Few marks, ≤3 words per label**, placed next to the thing they name. No legends. The caption is
+  one short sentence carrying the number.
+- **The picture carries the bad news too.** If the catch isn't drawn, it sits right under the picture.
+  An estimate is drawn as one (dashed, "est."), never as solid as a measurement. If you can't draw the
+  catch in, the picture is overselling — change it.
+- **The `aria-label` is the one-sentence finding**, so a screen reader — and the fact-verifier — get the
+  claim, not a description of a scene.
+- **Inline SVG only, every fill/stroke a `var(--x)`** — no `<img src>`, no external files, so the page
+  still opens from `file://` and follows the 🎮/📄/🌌 theme toggle. `role="img"` on the `<figure>`, the
+  inner `<svg>` `aria-hidden`. (`check_html.py` enforces all of this.) Pixel style suits the arcade
+  theme; clarity beats style.
+- **Fact-check the picture like a claim.** A drawing drifts exactly like prose. Feed captions and
+  aria-labels to the fact-verifier with the report text.
+
+### The word budget
+`check_html.py` fails the page when it goes over:
+
+- **≤60 visible words** in the hero and in each section; **≤350** on the whole page.
+- The short version is **≤40 words** and still includes the catch.
+- Engineer's notes go in a collapsed `<details class="eng">` (opened automatically for printing) and
+  don't count. Nor do tables, SVG text, or the footer.
+- **The honesty box counts and is never collapsed.** Meet the budget by drawing, never by hiding the
+  catch where nobody will open it.
+- If a report can't fit, it's two reports.
+
+### Animate only when the point is a change
+Follow the `animate` skill's rules. In a report its gate comes out as: purpose = *explanation*, seen
+once → motion is allowed, but **only when the finding is itself a change or a sequence** — a bar growing
+past a deadline, items piling up, a cause reaching its effect. A share or a count gets a static picture,
+or at most a quick build-in.
+
+- **Use the template's machinery, don't write new.** Put `class="figure animated"` on the figure and
+  `class="anim pop|stamp|run"` on the SVG elements that move; stagger with inline `animation-delay`
+  steps of 30–80ms. Each figure plays once, when it scrolls into view. No loops beside text.
+- **The base style is the final frame.** The keyframes only define where motion starts. With no JS,
+  under reduced motion, and in print the figure never arms, so the reader sees the final frame — which
+  therefore has to carry the point *and* the catch on its own.
+- `transform` and `opacity` only; easing from the `--ease-out` token (taken from the `animate` skill's
+  table), never a hand-made curve.
+- **Motion makes claims too.** A bar animating from 4h down to 2h says "will halve." If the source says
+  "could," the end state says "est." — and the fact-verifier checks the end state.
 
 ## Structure (the template's spine)
 The `assets/template.html` shell, top to bottom — re-bind the content, keep the bones:
 1. **Hero** — playful title with the metaphor named; a one-sentence plain framing; a row of "pills" with
    the headline facts (the win AND the catch).
-2. **The one-paragraph version** — the honest TL;DR, big text, stoppable.
+2. **The short version** — the honest TL;DR in ≤40 words, stoppable, catch included.
 3. **A reminder of what we were even trying to do** — often a two-card "today (the problem) vs the plan,"
-   in metaphor terms, optionally led by the metaphor illustration (`figure.figure`). Skip if the
-   audience already knows.
-4. **Findings** — one section per real finding. Each pairs a plain claim with its number (bar/tile) and,
-   where useful, an engineer's note. Bad news gets a clear callout, not a hedge.
+   in metaphor terms. Skip if the audience already knows.
+4. **Findings** — one section per real finding, led by its picture (`figure.figure`) with the number in
+   the caption, then at most a line or a callout, then a collapsed engineer's note. Bad news gets a
+   clear callout, not a hedge.
 5. **What changed / what we can skip** — concrete outcomes, in plain terms.
 6. **Honesty box** — the limits, foregrounded.
 7. **What's next** — a short checklist (done vs to-do).
@@ -168,16 +195,13 @@ plain text. A tickable question that is already being worked on wastes the one t
 spending: their attention.
 
 ## How to build one
-1. **Run an eli5 framing pass first.** Before touching the source material, do a quick, throwaway pass in
-   the style of the `eli5` skill (github.com/anthropics/claude-plugins-community — installed as
-   `eli5@claude-community`): explain the topic to yourself as if to someone who knows nothing, in a
-   couple of sentences, picture-first, no jargon. Borrow the brief, don't invoke `/eli5` itself — that
-   skill builds its own finished HTML artifact, and this pass is a warm-up you throw away. Its only job
-   is to surface three things before the real numbers and caveats pull your language back toward jargon:
-   the metaphor the whole report will hang on, the single sentence a total outsider would need, and the
-   one scene you would draw (which feeds the figure in step 7). If this framing can't find one clean
-   picture for the topic, that's a signal the topic needs splitting into more than one report, or more
-   than one figure — better to learn that now than after the honesty box is written.
+1. **Run an eli5 pass first, and keep what it finds.** Before touching the source, explain each
+   finding to yourself in the style of the `eli5` skill (github.com/anthropics/claude-plugins-community —
+   installed as `eli5@claude-community`): someone who knows nothing, one sentence, picture-first, no
+   jargon. Borrow its brief rather than invoking `/eli5`, which publishes its own separate page; this
+   report has to stay one self-contained file. Keep the output — it is the plan for the report: the
+   metaphor, the one sentence per finding, and the picture that shows each sentence (a count, a
+   comparison, or a cause). If a finding has no clean picture, it is probably two findings.
 2. **Read the source material** (the analysis doc, the transcript, the findings) and extract: the real
    numbers, the bottom line, the limits, and what was produced. Don't proceed on a vague understanding —
    the report is only as honest as your grasp of the facts.
@@ -191,16 +215,18 @@ spending: their attention.
    readers get paper); an explicit click is remembered; print forces a clean light theme. Edit
    content, not CSS — and never hardcode
    a colour; every colour is a `--var` so all three themes stay correct.
-5. **Write plain.** Short sentences. Second person. Name a thing once in metaphor, then reuse it. If a
-   sentence has a piece of jargon the audience won't know, either cut it or move it to an engineer's note.
+5. **Write plain, and little.** Short sentences. Second person. Name a thing once in metaphor, then
+   reuse it. Stay inside the word budget; jargon and method go in a collapsed engineer's note.
 6. **Pair every claim with its evidence** (number/bar/tile). Add engineer's notes where they earn their
    keep.
-7. **Optionally illustrate the metaphor** (see *Illustrate the metaphor*) — one inline-SVG figure,
-   theme-var colours, bad news included, or no figure at all.
+7. **Draw each finding** (see *Pictures first*) — the picture is the claim, the cover test passes,
+   the catch is drawn. Animate it only if the finding is a change.
 8. **Fact-check the report against the source** — the honesty gate (see *Fact-check before you ship*).
    A plain-English translation drifts easily; catch it before a stakeholder reads it. Include figure
    captions/aria-labels in what gets checked.
-9. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **If you added
+9. **Verify the render** (below) — a broken CSS variable silently turns text invisible. **Look at every
+   figure** at desktop and 390px width (labels collide in monospace before they do anywhere else), and
+   if anything animates, also with reduced motion on and in print: both must show the final frame. **If you added
    promptback widgets, verify them by DRIVING them, not by reading the HTML** — the copied text is
    assembled at runtime from hand-written `data-` attributes, and a chip that fails to persist or a key
    with a hole in it looks perfect on screen. Chrome is not always reachable (the extension was down the
@@ -277,7 +303,9 @@ phone. Two measured examples:
 The skill was extracted from a report that explained a retrieval-system investigation using a "robot
 librarian" metaphor — recall shown as "finds it ~51%," precision as "interrupts on ~99.6%," with
 engineer's notes, an honesty box, and a correction of an earlier false claim. The template carries a
-*different* worked example (a slow nightly job, as a "kitchen") so you can see the recipe generalize.
+*different* worked example (a slow nightly job, as a "kitchen") so you can see the recipe generalize:
+223 visible words, two pictures (seven of ten trays "done again"; tonight's run vs the estimate
+against the 6am bell), both animated, both readable as a still.
 Read `assets/template.html` top to bottom once before your first build — the inline comments mark each
 slot and the intent behind it.
 

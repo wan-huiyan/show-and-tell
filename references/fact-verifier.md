@@ -63,7 +63,10 @@ return UNVERIFIABLE, which is a true answer but a useless one. >>>
    and aria-label the same way as prose: does the scene imply something the source doesn't support
    (a "fixed!" picture for a "could improve" finding; a triumphant image with the catch missing)?
    The skill's rule is that the picture must carry the bad news too — flag a figure that only shows
-   the win, even if every sentence around it is individually accurate.
+   the win, even if every sentence around it is individually accurate. For an **animated** figure,
+   check the END state (what a reader with reduced motion or a printout sees) and what the motion
+   itself implies: a bar shrinking from 4h to 2h reads as "will halve"; if the source says "could",
+   the end state must mark it as an estimate.
 8. **Invented scope / qualifier.** A figure the source leaves *unscoped* must not gain a scope word in
    the report. A `per-session` / `per-user` / `per-project` / `per-run` qualifier — or an "each" /
    "every" — stapled onto a raw number is drift: the number is right, but its scope is fabricated.

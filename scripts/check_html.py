@@ -11,7 +11,10 @@ Catches the silent-failure cases that make a page open broken:
   4. Render-time network references (external <img>/<script>/<link>/@import/url(http...)) ->
      breaks the "opens from file://, no network" promise. Plain <a href> links are fine.
   5. Illustrations without a text alternative (<img> missing alt, <svg> with no aria) and
-     hardcoded colours in the body (fill="#..."), which won't follow the theme switcher.
+     hardcoded colours in the body (fill="#..."), which won't follow the theme switcher;
+     @keyframes with no prefers-reduced-motion rule.
+  6. Too many words: more than 60 visible words in the hero or any <section>, or more than
+     350 on the page. Engineer's notes, tables, SVG and the footer don't count.
 
 WHAT IT DOES NOT CATCH — a pass means "the structure is sound", not "the page works":
   * It does not PARSE ATTRIBUTE VALUES. A truncated or malformed attribute leaves the tags
@@ -34,7 +37,11 @@ Exit 0 = clean; exit 1 = problems found (printed). The visual polish still wants
 but this gate stops you handing the user a page with invisible text.
 """
 import sys, re
+from html import unescape
 from html.parser import HTMLParser
+
+MAX_SECTION_WORDS = 60   # per hero / <section>
+MAX_PAGE_WORDS = 350
 
 VOID = {"meta", "br", "img", "input", "hr", "link", "area", "base", "col", "embed",
         "param", "source", "track", "wbr"}
@@ -133,6 +140,30 @@ def main():
     if hard:
         problems.append(f"hardcoded colours outside the theme system (use var(--x) instead): {sorted(hard)}")
 
+    # 5c) motion must have a reduced-motion path — the page has to read correctly without it
+    if re.search(r"@keyframes\b", styles) and "prefers-reduced-motion" not in styles:
+        problems.append("@keyframes used but no @media (prefers-reduced-motion) rule — "
+                        "reduced-motion readers get the animation anyway")
+
+    # 5d) word budget — the reader skims, so the words that are always on screen are capped.
+    #     Counted: hero + each <section>. Not counted: engineer's notes (.eng), tables, SVG, footer.
+    #     The honesty box IS counted — the budget is met by drawing, never by hiding the catch.
+    main_html = html.split("<main", 1)[-1]
+    def visible_words(chunk):
+        chunk = re.sub(r'<(details|p)\b[^>]*class="[^"]*\beng\b[^"]*"[^>]*>.*?</\1>', " ", chunk, flags=re.S)
+        chunk = re.sub(r"<(table|svg|footer|script|style)\b.*?</\1>", " ", chunk, flags=re.S)
+        return len(unescape(re.sub(r"<[^>]+>", " ", chunk)).split())
+    blocks = [m.group(0) for m in re.finditer(r"<(header|section)\b.*?</\1>", main_html, flags=re.S)]
+    counts = [visible_words(b) for b in blocks]
+    for b, n in zip(blocks, counts):
+        if n > MAX_SECTION_WORDS:
+            h = re.search(r"<h[12]\b[^>]*>(.*?)</h[12]>", b, re.S)
+            name = " ".join(re.sub(r"<[^>]+>", " ", h.group(1)).split()) if h else "?"
+            problems.append(f"too many words: {n} visible in '{name}' (max {MAX_SECTION_WORDS}) — "
+                            "draw it, move detail to an engineer's note, or split the report")
+    if sum(counts) > MAX_PAGE_WORDS:
+        problems.append(f"too many words: {sum(counts)} visible on the page (max {MAX_PAGE_WORDS})")
+
     # 6) optional content presence (catch a template slot left unfilled / a placeholder shipped)
     for phrase in expect:
         if phrase not in raw:
@@ -149,7 +180,7 @@ def main():
             print("   ✗", p)
         sys.exit(1)
     print("  ✓ tags balanced · all CSS vars defined · themes in parity · self-contained ·"
-          " figures labelled · no hardcoded colours · no leftover placeholders")
+          " figures labelled · no hardcoded colours · word budget · no leftover placeholders")
     print("  ⚠ NOT checked: attribute VALUES (a broken one leaves the tags balanced), the"
           " page EXECUTING, and whether the content is true — check those separately")
     sys.exit(0)
